@@ -6,7 +6,7 @@ miniRT
 mlx-test
 a.out
 test/
-scene.*
+scene.bmp
 .vscode/
 
 # swift

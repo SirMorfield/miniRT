@@ -1,8 +1,8 @@
 
-NAME      		= exercise
+NAME      		= miniRT
 
 CC          	= clang++
-CFLAGS      	= -Wall -Wextra -Werror -pedantic -std=c++98 -Wshadow -O0
+CFLAGS      	= -Wall -Wextra -Werror -pedantic -std=c++98 -Wshadow
 # CFLAGS      	= -Wall -Wextra -Werror -Wuninitialized -O3
 
 SRCEXT      	= cpp
