@@ -1,142 +1,54 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         ::::::::             #
-#    Makefile                                           :+:    :+:             #
-#                                                      +:+                     #
-#    By: jkoers <jkoers@student.codam.nl>             +#+                      #
-#                                                    +#+                       #
-#    Created: 2020/11/05 15:36:08 by jkoers        #+#    #+#                  #
-#    Updated: 2021/01/17 13:35:42 by jkoers        ########   odam.nl          #
-#                                                                              #
-# **************************************************************************** #
 
-NAME      		= miniRT
+NAME      		= exercise
 
-CC          	= gcc
-CFLAGS      	= -Wall -Wextra -Werror -Wuninitialized -O3
-# CFLAGS			= -Wall -Wextra -Wuninitialized -O0 # debug
+CC          	= clang++
+CFLAGS      	= -Wall -Wextra -Werror -pedantic -std=c++98 -Wshadow -O0
+# CFLAGS      	= -Wall -Wextra -Werror -Wuninitialized -O3
 
-SRCEXT      	= c
+SRCEXT      	= cpp
 SRCDIR      	= src
-HEADERDIR		= include
 OBJEXT      	= o
+HEADEREXT		= hpp
+HEADERDIR		= include
 BUILDDIR    	= obj
 
-SETTINGS		= settings.h
-LIBDIR			= lib
-ifeq ($(shell uname),Linux)
-MLXDIR			= minilibx-linux/
-LINKSRC			= -lm -lpthread
-LINKS			= $(LINKSRC) -L$(LIBDIR)/$(MLXDIR) -lmlx -lXext -lX11
-LIBS			= $(LIBDIR)/minilibx-linux/libmlx.a \
-				  $(LIBDIR)/libft/bin/libft.a
-else
-MLXDIR			= minilibx_mms_20200219/
-LINKSRC			=
-LINKS			=
-LIBS			= $(LIBDIR)/libft/bin/libft.a libmlx.dylib
-endif
+LIBS			=
+INCLUDES		= -I$(HEADERDIR)
+LINK			=
 
-HEADERS			= $(shell find $(HEADERDIR) -type f -name '*.h')
-include sources.mk
-OBJ	= $(foreach src,$(SRC),$(BUILDDIR)/$(notdir $(src:.$(SRCEXT)=.$(OBJEXT))))
+OBJ_IN_DIR 		= $(BUILDDIR)/*.$(OBJEXT)
+SRC 			= $(wildcard $(SRCDIR)/*.$(SRCEXT))
+HEADERS 		= $(wildcard $(HEADERDIR)/*.$(HEADEREXT))
+OBJ				= $(foreach src,$(SRC),$(BUILDDIR)/$(notdir $(src:.$(SRCEXT)=.$(OBJEXT))))
 
-STARTGREEN		= @echo "\033[38;2;0;255;0m\c"
-RESETCOLOR		= @echo "\033[0m\c"
-TESTRT			= rt/standard.rt
+SILECE_MAKE 	= | grep -v -E ".*Leaving directory|.*Entering directory"
+VPATH 			= $(shell find $(SRCDIR) -type d | tr '\n' ':' | sed -E 's/(.*):/\1/')
+.SUFFIXES:
 
-VPATH = $(shell find $(SRCDIR) -type d | tr '\n' ':' | sed -E 's/(.*):/\1/')
+all: $(NAME)
 
-all:
-ifneq ($(shell grep $(SETTINGS) -e '\# define BONUS.*'),\# define BONUS 0)
-ifeq ($(shell uname),Linux)
-	sed -i 's/# define BONUS.*/# define BONUS 0/' $(SETTINGS)
-else
-	sed -i '' 's/# define BONUS.*/# define BONUS 0/' $(SETTINGS)
-endif
-endif
-	make -j4 $(NAME)
+$(NAME): $(BUILDDIR)/ $(OBJ) $(HEADERS)
+	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ_IN_DIR) $(LIBS) -o $(NAME) $(LINK)
 
-bonus:
-ifneq ($(shell grep $(SETTINGS) -e '\# define BONUS.*'),\# define BONUS 1)
-ifeq ($(shell uname),Linux)
-	sed -i 's/# define BONUS.*/# define BONUS 1/' $(SETTINGS)
-else
-	sed -i '' 's/# define BONUS.*/# define BONUS 1/' $(SETTINGS)
-endif
-endif
-	make -j4 $(NAME)
-
-$(NAME): $(BUILDDIR)/ $(OBJ) $(HEADERS) $(LIBS) $(SETTINGS)
-	$(CC) $(CFLAGS) -I$(HEADERDIR) $(BUILDDIR)/*.$(OBJEXT) -o $(NAME) \
-$(LIBS) $(LINKS)
-
+$(BUILDDIR)/%.$(OBJEXT): %.$(SRCEXT) $(HEADERS)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(BUILDDIR)/$(notdir $@)
 # sources
 
-$(BUILDDIR)/%.$(OBJEXT): %.$(SRCEXT) $(HEADERS) $(SETTINGS)
-	$(CC) $(CFLAGS) -I$(HEADERDIR) -c $< -o $(BUILDDIR)/$(notdir $@) $(LINKSRC)
-
-# libs
-
-ifeq ($(shell uname),Linux)
-$(LIBDIR)/minilibx-linux/libmlx.a:
-	$(MAKE) -C $(LIBDIR)/minilibx-linux/
-else
-libmlx.dylib:
-	make -C $(LIBDIR)/minilibx_mms_20200219/
-	cp $(LIBDIR)/minilibx_mms_20200219/libmlx.dylib .
-endif
-
-$(LIBDIR)/libft/bin/libft.a:
-	$(MAKE) -C $(LIBDIR)/libft/
 
 clean:
-	make -C $(LIBDIR)/minilibx-linux/ clean
-	make -C $(LIBDIR)/libft/ clean
 ifneq ($(BUILDDIR),.)
 	/bin/rm -rf $(BUILDDIR)/
 endif
 
-fclean:
-	$(MAKE) clean
-# make -C $(LIBDIR)/minilibx-linux/ fclean
-	make -C $(LIBDIR)/libft/ fclean
+fclean: | clean
 	/bin/rm -f $(NAME)
 
-re:
-	$(MAKE) fclean
-	$(MAKE) all
+re: | fclean all
 
 $(BUILDDIR)/:
 	mkdir -p $(BUILDDIR)
 
-findsources:
-	echo "# SRC = find src/ -name \"\*.c\" -exec echo \"\{\} \\\\\" \\\;" \
-> sources.mk
-	echo "SRC = \\" >> sources.mk
-	find src/ -name "*.c" -exec echo "{} \\" \; >> sources.mk
-
 silent:
-	@$(MAKE) bonus > /dev/null
+	@$(MAKE) > /dev/null
 
-standard:
-	@$(MAKE) bonus > /dev/null
-	@./$(NAME) $(TESTRT) --save
-	@while inotifywait -qq -e close_write $(TESTRT); do \
-$(MAKE) bonus > /dev/null && ./$(NAME) $(TESTRT) --save; done
-
-rt:
-	@$(MAKE) bonus > /dev/null
-	@find rt/ -name "*.rt" -exec echo {} \; \
--exec ./$(NAME) {} --save \; \
--exec mv scene.bmp {}.bmp \; \
--exec echo "" \;
-
-rttest:
-	@$(MAKE) bonus > /dev/null
-	@find rt_test/ -name "*.rt" -exec echo {} \; \
--exec ./$(NAME) {} --save \; \
--exec mv scene.bmp {}.bmp \; \
--exec echo "" \;
-
-.PHONY: all clean fclean re silent eval evalclean rt rtall
+.PHONY: all clean fclean re silent
