@@ -1,7 +1,36 @@
 #include "main.hpp"
-Hit Sphere::hit(const Vec3& origin, const Vec3& dir) {
-	(void)origin;
-	(void)dir;
-	Hit hit(false, 999.0f, Vec3(0.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 0.0f));
+#include "util.hpp"
+#include "vector.hpp"
+
+Quadradic Sphere::_get_intersections(const Ray& ray) const {
+	Vec3  l = subtract(ray.origin, _origin);
+	float a = dot(ray.dir, ray.dir);
+	float b = 2 * dot(ray.dir, l);
+	float c = dot(l, l) - _radius * _radius;
+	return (solve_quadratic(a, b, c));
+}
+
+// see doc/rayspherecases.png
+static float actual_t(float t0, float t1) {
+	if (t0 > 0 && t1 > 0)
+		return (t0);
+	if (t0 <= 0 && t1 > 0)
+		return (t1);
+	return (-1);
+}
+
+Hit Sphere::hit(const Ray& ray) const {
+	Quadradic q = _get_intersections(ray);
+	if (!q.solved)
+		return Hit(false);
+	Hit hit(true);
+	hit.dist = actual_t(q.x0, q.x1);
+	if (hit.dist < 0)
+		return Hit(false);
+	hit.point = translate(ray.origin, ray.dir, hit.dist);
+	if (distance2(ray.origin, _origin) > _radius * _radius)
+		hit.normal = unit(subtract(hit.point, _origin));
+	else
+		hit.normal = unit(subtract(_origin, hit.point));
 	return hit;
 }
