@@ -1,5 +1,6 @@
 // this will be removed
 #include "vector.hpp"
+#include <cmath>
 
 void normalize(Vec3* v) {
 	float inv_len = 1 / std::sqrt(v->x * v->x + v->y * v->y + v->z * v->z);

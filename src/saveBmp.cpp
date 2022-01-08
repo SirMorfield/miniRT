@@ -1,5 +1,5 @@
 // This is very very bad
-#include "main.hpp"
+#include "types.hpp"
 #include <cstdlib>
 #include <fcntl.h>
 #include <fstream>

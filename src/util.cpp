@@ -1,5 +1,4 @@
 #include "util.hpp"
-#include "main.hpp"
 #include "vector.hpp"
 #include <cmath>
 
@@ -37,4 +36,9 @@ T radians(T degrees) {
 template <typename T>
 T degrees(T radians) {
 	return radians * 180 / 3.141592653589793;
+}
+
+ID generateID() {
+	static ID id = 0;
+	return id++;
 }

@@ -1,6 +1,6 @@
 #pragma once
-#include "main.hpp"
-
+#include "types.hpp"
+class Vec3;
 void  normalize(Vec3* v);
 Vec3  unit(Vec3 v);
 Vec3  subtract(Vec3 a, Vec3 b);

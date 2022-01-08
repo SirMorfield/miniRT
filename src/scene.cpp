@@ -1,4 +1,5 @@
-#include "main.hpp"
+#include "computer.hpp"
+#include "types.hpp"
 #include <functional>
 
 Scene::Scene() {
@@ -9,19 +10,27 @@ Scene::Scene() {
 	_lights.push_back(light);
 }
 
-Hit Scene::hit(const Ray& ray) const {
+Hit Scene::hit(const Ray& ray, const std::set<ID>& ignore) const {
 	for (std::vector<const Sphere>::iterator it = _spheres.begin(); it != _spheres.end(); ++it) {
-		Hit hit = it->hit(ray);
-		if (hit.hit)
-			return hit;
+		if (ignore.find(it->id) != ignore.end())
+			continue;
+		Intersect intersect = it->intersect(ray);
+		if (intersect.hit)
+			return Hit(intersect.dist, intersect.point, intersect.normal, it->color, it->id);
 	}
 	return Hit(false);
 }
 
+// ray.origin = l->origin;
+// ray.dir = unit(subtract(hitpoint, l->origin));
+// from_light = get_bounce(shapes, ray);
+
 Rgb Scene::getColor(const Ray& ray) const {
-	Hit hit = this->hit(ray);
+	std::set<ID> ignore;
+	Hit			 hit = this->hit(ray, ignore);
 	if (!hit.hit)
 		return _backgroundColor;
+	ignore.insert(hit.id);
 	Rgb lightAccumulator = Rgb(0, 0, 0);
 	for (std::vector<const Light>::iterator light = _lights.begin(); light != _lights.end(); ++light) {
 		float relativeIntensity = light->relativeIntensity(hit.point, hit.normal);

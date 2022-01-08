@@ -1,4 +1,4 @@
-#include "main.hpp"
+#include "computer.hpp"
 
 int main() {
 	Scene	 scene;

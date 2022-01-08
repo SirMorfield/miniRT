@@ -1,6 +1,8 @@
-#include "main.hpp"
+#include "computer.hpp"
+#include "io.hpp"
+#include "types.hpp"
 #include "util.hpp"
-#include "vector.hpp"
+#include <cmath>
 
 Renderer::Renderer(size_t xSize, size_t ySize) : _xSize(xSize), _ySize(ySize) {
 	_camera = Camera(Vec3(0.0f, 0.0f, 2.0f), Vec3(0.0f, 0.0f, -1.0f), 10.0f);

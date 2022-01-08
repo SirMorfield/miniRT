@@ -1,9 +1,10 @@
-#include "main.hpp"
+#include "shapes.hpp"
+#include "types.hpp"
 #include "util.hpp"
-#include "vector.hpp"
 
 Sphere::Sphere(const Vec3& origin, const Rgb& color, float radius) {
 	this->color = color;
+	this->id = generateID();
 	this->_origin = origin;
 	this->_radius = radius;
 }
@@ -25,19 +26,18 @@ static float actual_t(float t0, float t1) {
 	return (-1);
 }
 
-Hit Sphere::hit(const Ray& ray) const {
+Intersect Sphere::intersect(const Ray& ray) const {
 	Quadradic q = _get_intersections(ray);
 	if (!q.solved)
-		return Hit(false);
-	Hit hit(true);
+		return Intersect(false);
+	Intersect hit(true);
 	hit.dist = actual_t(q.x0, q.x1);
 	if (hit.dist < 0)
-		return Hit(false);
+		return Intersect(false);
 	hit.point = translate(ray.origin, ray.dir, hit.dist);
 	if (distance2(ray.origin, _origin) > _radius * _radius)
 		hit.normal = unit(subtract(hit.point, _origin));
 	else
 		hit.normal = unit(subtract(_origin, hit.point));
-	hit.color = color;
 	return hit;
 }
