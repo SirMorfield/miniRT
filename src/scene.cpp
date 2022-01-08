@@ -1,5 +1,7 @@
 #include "computer.hpp"
+#include "io.hpp"
 #include "types.hpp"
+#include <fstream>
 #include <functional>
 
 Scene::Scene() {
@@ -8,6 +10,22 @@ Scene::Scene() {
 	_spheres.push_back(sphere);
 	Light light(Rgb(255, 255, 0), Vec3(2.0f, 0.0f, 5.0f), 0.8f);
 	_lights.push_back(light);
+}
+
+Scene::Scene(const std::string& path) {
+	_backgroundColor = Rgb(0, 0, 0);
+
+	std::ifstream file(path);
+	if (!file.is_open())
+		throw "file not found";
+	std::string line;
+	while (std::getline(file, line)) {
+		std::vector<std::string> blocks = split(line, ' ');
+		toLight(blocks, _lights);
+		toCamera(blocks, _camera);
+		toSphere(blocks, _spheres);
+	}
+	file.close();
 }
 
 Hit Scene::hit(const Ray& ray, const std::set<ID>& ignore) const {

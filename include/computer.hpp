@@ -9,25 +9,16 @@
 class Scene {
   public:
 	Scene();
-	Hit hit(const Ray& ray, const std::set<ID>& ignore) const;
-	Rgb getColor(const Ray& ray) const;
+	Scene(const std::string& path);
+	Hit	   hit(const Ray& ray, const std::set<ID>& ignore) const;
+	Rgb	   getColor(const Ray& ray) const;
+	Camera _camera;
 
   private:
 	bool				isClearPath(const std::set<ID>& ignore, const Vec3& point, const Light& light) const;
 	std::vector<Sphere> _spheres;
 	std::vector<Light>	_lights;
 	Rgb					_backgroundColor;
-};
-
-class Camera {
-  public:
-	Camera() {}
-	Camera(Vec3 pos, Vec3 dir, float fov);
-
-	//   private:
-	Vec3  _pos;
-	Vec3  _dir;
-	float _fov;
 };
 
 class Renderer {
@@ -37,11 +28,9 @@ class Renderer {
 	void saveToBMP();
 
   private:
-	Ray				 _rayFromPixel(float x, float y);
+	Ray				 _rayFromPixel(const Camera& camera, float x, float y);
 	size_t			 _xSize;
 	size_t			 _ySize;
-	Camera			 _camera;
 	float			 _aspectRatio;
-	float			 _fov;
 	std::vector<Rgb> _frame;
 };

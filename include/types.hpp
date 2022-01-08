@@ -1,6 +1,7 @@
 #pragma once
 #include "vector.hpp"
 #include <functional>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -66,4 +67,15 @@ class Light {
 	Rgb	  _color;
 	Vec3  _origin;
 	float _brightness;
+};
+
+class Camera {
+  public:
+	Camera() {}
+	Camera(Vec3 pos, Vec3 dir, float fov);
+
+	//   private:
+	Vec3  _pos;
+	Vec3  _dir;
+	float _fov;
 };

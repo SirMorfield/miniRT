@@ -28,17 +28,16 @@ Quadradic solve_quadratic(float a, float b, float c) {
 	return result;
 }
 
-template <typename T>
-T radians(T degrees) {
-	return degrees * 3.141592653589793 / 180;
-}
-
-template <typename T>
-T degrees(T radians) {
-	return radians * 180 / 3.141592653589793;
-}
-
 ID generateID() {
 	static ID id = 0;
 	return id++;
+}
+
+std::vector<std::string> split(const std::string& s, char delim) {
+	std::istringstream		 iss(s);
+	std::vector<std::string> elems;
+	std::string				 item;
+	while (std::getline(iss, item, delim))
+		elems.push_back(item);
+	return elems;
 }
