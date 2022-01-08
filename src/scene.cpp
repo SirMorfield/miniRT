@@ -10,6 +10,7 @@ Scene::Scene() {
 	_spheres.push_back(sphere);
 	Light light(Rgb(255, 255, 0), Vec3(2.0f, 0.0f, 5.0f), 0.8f);
 	_lights.push_back(light);
+	_camera = Camera(Vec3(0.0f, 0.0f, 2.0f), Vec3(0.0f, 0.0f, -1.0f), 10.0f);
 }
 
 Scene::Scene(const std::string& path) {
@@ -42,7 +43,7 @@ Hit Scene::hit(const Ray& ray, const std::set<ID>& ignore) const {
 bool Scene::isClearPath(const std::set<ID>& ignore, const Vec3& point, const Light& light) const {
 	Ray toLight(point, unit(subtract(light._origin, point)));
 	Hit hit = Scene::hit(toLight, ignore);
-	return hit.hit && hit.dist * hit.dist > distance2(light._origin, point);
+	return !hit.hit || hit.dist * hit.dist > distance2(light._origin, point);
 }
 // ray.origin = l->origin;
 // ray.dir = unit(subtract(hitpoint, l->origin));
