@@ -21,6 +21,18 @@ class Scene {
 	Rgb					_backgroundColor;
 };
 
+template <class T>
+Hit hitObject(const std::vector<T>& objects, const Ray& ray, const std::set<ID>& ignore) {
+	for (typename std::vector<const T>::iterator it = objects.begin(); it != objects.end(); ++it) {
+		if (ignore.find(it->id) != ignore.end())
+			continue;
+		Intersect intersect = it->intersect(ray);
+		if (intersect.hit)
+			return Hit(intersect.dist, intersect.point, intersect.normal, it->color, it->id);
+	}
+	return Hit(false);
+}
+
 class Renderer {
   public:
 	Renderer(size_t xSize, size_t ySize);

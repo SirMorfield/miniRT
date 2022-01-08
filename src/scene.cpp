@@ -30,14 +30,8 @@ Scene::Scene(const std::string& path) {
 }
 
 Hit Scene::hit(const Ray& ray, const std::set<ID>& ignore) const {
-	for (std::vector<const Sphere>::iterator it = _spheres.begin(); it != _spheres.end(); ++it) {
-		if (ignore.find(it->id) != ignore.end())
-			continue;
-		Intersect intersect = it->intersect(ray);
-		if (intersect.hit)
-			return Hit(intersect.dist, intersect.point, intersect.normal, it->color, it->id);
-	}
-	return Hit(false);
+	Hit hit = hitObject(_spheres, ray, ignore);
+	return hit;
 }
 
 bool Scene::isClearPath(const std::set<ID>& ignore, const Vec3& point, const Light& light) const {
