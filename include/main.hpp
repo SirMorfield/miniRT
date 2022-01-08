@@ -1,38 +1,12 @@
 #pragma once
+#include "lighting.hpp"
+#include "types.hpp"
 #include "util.hpp"
 #include <algorithm>
 #include <cmath>
 #include <functional>
 #include <iostream>
 #include <vector>
-
-class Vec3 {
-  public:
-	Vec3(float x, float y, float z) : x(x), y(y), z(z) {}
-	float x;
-	float y;
-	float z;
-	Vec3() {}
-};
-
-typedef struct {
-	Vec3 origin;
-	Vec3 dir;
-} Ray;
-
-typedef struct { // TODO better name
-	float t0;
-	float t1;
-} Tintesects;
-
-class Rgb {
-  public:
-	Rgb() {}
-	Rgb(uint8_t r, uint8_t g, uint8_t b) : r(r), g(g), b(b) {}
-	uint8_t r;
-	uint8_t g;
-	uint8_t b;
-};
 
 class Hit {
   public:
@@ -42,6 +16,7 @@ class Hit {
 	float dist;
 	Vec3  point;
 	Vec3  normal;
+	Rgb	  color;
 };
 
 class Shape {
@@ -63,11 +38,7 @@ class Camera {
 
 class Sphere : public Shape {
   public:
-	Sphere(const Vec3& origin, const Rgb& color, float radius) {
-		this->color = color;
-		this->_origin = origin;
-		this->_radius = radius;
-	}
+	Sphere(const Vec3& origin, const Rgb& color, float radius);
 	Hit hit(const Ray& ray) const;
 	virtual ~Sphere() {}
 
@@ -81,9 +52,12 @@ class Scene {
   public:
 	Scene();
 	Hit hit(const Ray& ray) const;
+	Rgb getColor(const Ray& ray) const;
 
   private:
 	std::vector<Sphere> _spheres;
+	std::vector<Light>	_lights;
+	Rgb					_backgroundColor;
 };
 
 class Renderer {

@@ -3,7 +3,7 @@
 #include "vector.hpp"
 
 Renderer::Renderer(size_t xSize, size_t ySize) : _xSize(xSize), _ySize(ySize) {
-	_camera = Camera(Vec3(0.0f, 0.0f, 5.0f), Vec3(0.0f, 0.0f, -1.0f), 10.0f);
+	_camera = Camera(Vec3(0.0f, 0.0f, 2.0f), Vec3(0.0f, 0.0f, -1.0f), 10.0f);
 	_aspectRatio = (float)_xSize / _ySize;
 	_fov = tan(_camera._fov * 0.5);
 	_frame.reserve(xSize * ySize);
@@ -29,11 +29,7 @@ void Renderer::render(const Scene& scene) {
 	for (size_t y = 0; y < _ySize; y++) {
 		for (size_t x = 0; x < _xSize; x++) {
 			Ray ray = _rayFromPixel(x, y);
-			Hit hit = scene.hit(ray);
-			if (hit.hit)
-				_frame[y * _xSize + x] = Rgb(200, 200, 200);
-			else
-				_frame[y * _xSize + x] = Rgb(0, 0, 0);
+			_frame[y * _xSize + x] = scene.getColor(ray);
 		}
 	}
 }

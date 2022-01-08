@@ -2,6 +2,12 @@
 #include "util.hpp"
 #include "vector.hpp"
 
+Sphere::Sphere(const Vec3& origin, const Rgb& color, float radius) {
+	this->color = color;
+	this->_origin = origin;
+	this->_radius = radius;
+}
+
 Quadradic Sphere::_get_intersections(const Ray& ray) const {
 	Vec3  l = subtract(ray.origin, _origin);
 	float a = dot(ray.dir, ray.dir);
@@ -32,5 +38,6 @@ Hit Sphere::hit(const Ray& ray) const {
 		hit.normal = unit(subtract(hit.point, _origin));
 	else
 		hit.normal = unit(subtract(_origin, hit.point));
+	hit.color = color;
 	return hit;
 }

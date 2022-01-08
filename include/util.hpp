@@ -6,3 +6,8 @@ typedef struct {
 	float x1;
 } Quadradic;
 Quadradic solve_quadratic(float a, float b, float c);
+
+template <typename T>
+T radians(T degrees);
+template <typename T>
+T degrees(T radians);

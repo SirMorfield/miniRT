@@ -1,5 +1,6 @@
 #include "util.hpp"
 #include "main.hpp"
+#include "vector.hpp"
 #include <cmath>
 
 Quadradic solve_quadratic(float a, float b, float c) {
@@ -26,4 +27,14 @@ Quadradic solve_quadratic(float a, float b, float c) {
 		std::swap(result.x0, result.x1);
 	result.solved = true;
 	return result;
+}
+
+template <typename T>
+T radians(T degrees) {
+	return degrees * 3.141592653589793 / 180;
+}
+
+template <typename T>
+T degrees(T radians) {
+	return radians * 180 / 3.141592653589793;
 }
