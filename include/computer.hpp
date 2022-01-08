@@ -13,6 +13,7 @@ class Scene {
 	Rgb getColor(const Ray& ray) const;
 
   private:
+	bool				isClearPath(const std::set<ID>& ignore, const Vec3& point, const Light& light) const;
 	std::vector<Sphere> _spheres;
 	std::vector<Light>	_lights;
 	Rgb					_backgroundColor;

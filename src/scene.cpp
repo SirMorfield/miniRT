@@ -21,6 +21,11 @@ Hit Scene::hit(const Ray& ray, const std::set<ID>& ignore) const {
 	return Hit(false);
 }
 
+bool Scene::isClearPath(const std::set<ID>& ignore, const Vec3& point, const Light& light) const {
+	Ray toLight(point, unit(subtract(light._origin, point)));
+	Hit hit = Scene::hit(toLight, ignore);
+	return hit.hit && hit.dist * hit.dist > distance2(light._origin, point);
+}
 // ray.origin = l->origin;
 // ray.dir = unit(subtract(hitpoint, l->origin));
 // from_light = get_bounce(shapes, ray);
@@ -33,6 +38,8 @@ Rgb Scene::getColor(const Ray& ray) const {
 	ignore.insert(hit.id);
 	Rgb lightAccumulator = Rgb(0, 0, 0);
 	for (std::vector<const Light>::iterator light = _lights.begin(); light != _lights.end(); ++light) {
+		if (!isClearPath(ignore, hit.point, *light))
+			continue;
 		float relativeIntensity = light->relativeIntensity(hit.point, hit.normal);
 		lightAccumulator.add(light->_color, relativeIntensity);
 	}

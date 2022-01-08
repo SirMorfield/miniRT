@@ -24,10 +24,13 @@ class Rgb {
 	uint8_t b;
 };
 
-typedef struct {
+class Ray {
+  public:
+	Ray() {}
+	Ray(Vec3 origin, Vec3 dir) : origin(origin), dir(dir) {}
 	Vec3 origin;
 	Vec3 dir;
-} Ray;
+};
 
 typedef struct { // TODO better name
 	float t0;
