@@ -79,3 +79,5 @@ class Camera {
 	Vec3  _dir;
 	float _fov;
 };
+
+#define EPSILON 1e-8

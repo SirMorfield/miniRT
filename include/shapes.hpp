@@ -21,3 +21,18 @@ class Sphere : public Shape {
 	float	  _radius;
 	Quadradic _get_intersections(const Ray& ray) const;
 };
+
+class Triangle : public Shape {
+  public:
+	Triangle(Rgb color, Vec3 p0, Vec3 p1, Vec3 p2);
+	Intersect intersect(const Ray& ray) const;
+	virtual ~Triangle() {}
+
+  private:
+	Vec3 p0;
+	Vec3 p1;
+	Vec3 p2;
+	Vec3 edge1;
+	Vec3 edge2;
+	Vec3 normal;
+};

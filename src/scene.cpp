@@ -25,12 +25,21 @@ Scene::Scene(const std::string& path) {
 		toLight(blocks, _lights);
 		toCamera(blocks, _camera);
 		toSphere(blocks, _spheres);
+		toTriangle(blocks, _triangles);
 	}
 	file.close();
 }
 
 Hit Scene::hit(const Ray& ray, const std::set<ID>& ignore) const {
-	Hit hit = hitObject(_spheres, ray, ignore);
+	Hit hits[] = {
+		hitShape(_spheres, ray, ignore),
+		hitShape(_triangles, ray, ignore),
+	};
+	Hit hit(false);
+	for (size_t i = 0; i < sizeof(hits) / sizeof(Hit); i++) {
+		if (hits[i].hit && (!hit.hit || hits[i].dist < hit.dist))
+			hit = hits[i];
+	}
 	return hit;
 }
 
@@ -39,9 +48,6 @@ bool Scene::isClearPath(const std::set<ID>& ignore, const Vec3& point, const Lig
 	Hit hit = Scene::hit(toLight, ignore);
 	return !hit.hit || hit.dist * hit.dist > distance2(light._origin, point);
 }
-// ray.origin = l->origin;
-// ray.dir = unit(subtract(hitpoint, l->origin));
-// from_light = get_bounce(shapes, ray);
 
 Rgb Scene::getColor(const Ray& ray) const {
 	std::set<ID> ignore;

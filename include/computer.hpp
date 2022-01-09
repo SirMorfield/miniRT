@@ -15,14 +15,15 @@ class Scene {
 	Camera _camera;
 
   private:
-	bool				isClearPath(const std::set<ID>& ignore, const Vec3& point, const Light& light) const;
-	std::vector<Sphere> _spheres;
-	std::vector<Light>	_lights;
-	Rgb					_backgroundColor;
+	bool				  isClearPath(const std::set<ID>& ignore, const Vec3& point, const Light& light) const;
+	std::vector<Sphere>	  _spheres;
+	std::vector<Triangle> _triangles;
+	std::vector<Light>	  _lights;
+	Rgb					  _backgroundColor;
 };
 
 template <class T>
-Hit hitObject(const std::vector<T>& objects, const Ray& ray, const std::set<ID>& ignore) {
+Hit hitShape(const std::vector<T>& objects, const Ray& ray, const std::set<ID>& ignore) {
 	for (typename std::vector<const T>::iterator it = objects.begin(); it != objects.end(); ++it) {
 		if (ignore.find(it->id) != ignore.end())
 			continue;

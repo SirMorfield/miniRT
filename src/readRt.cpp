@@ -90,3 +90,23 @@ void toCamera(const std::vector<std::string>& blocks, Camera& camera) {
 		return;
 	camera = Camera(origin, dir, radians(fov));
 }
+
+void toTriangle(const std::vector<std::string>& blocks, std::vector<Triangle>& triangles) {
+	if (blocks.size() != 5)
+		return;
+	if (blocks.at(0) != "tr")
+		return;
+	Vec3 p0;
+	if (!toVec3(p0, blocks.at(1)))
+		return;
+	Vec3 p1;
+	if (!toVec3(p1, blocks.at(2)))
+		return;
+	Vec3 p2;
+	if (!toVec3(p2, blocks.at(3)))
+		return;
+	Rgb color;
+	if (!toRgb(color, blocks.at(4)))
+		return;
+	triangles.push_back(Triangle(color, p0, p1, p2));
+}
