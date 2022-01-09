@@ -83,10 +83,10 @@ void toCamera(const std::vector<std::string>& blocks, Camera& camera) {
 	if (!toVec3(origin, blocks.at(1)))
 		return;
 	Vec3 dir;
-	if (!toVec3(dir, blocks.at(1)))
+	if (!toVec3(dir, blocks.at(2)))
 		return;
 	float fov;
-	if (!toFloat(fov, blocks.at(2)))
+	if (!toFloat(fov, blocks.at(3)))
 		return;
 	camera = Camera(origin, dir, radians(fov));
 }
