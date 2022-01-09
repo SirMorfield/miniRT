@@ -38,6 +38,7 @@ std::vector<std::string> split(const std::string& s, char delim) {
 	std::vector<std::string> elems;
 	std::string				 item;
 	while (std::getline(iss, item, delim))
-		elems.push_back(item);
+		if (item.size())
+			elems.push_back(item);
 	return elems;
 }

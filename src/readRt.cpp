@@ -41,7 +41,7 @@ bool toFloat(float& f, const std::string& s) {
 }
 
 void toLight(const std::vector<std::string>& blocks, std::vector<Light>& lights) {
-	if (blocks.size() != 3)
+	if (blocks.size() != 4)
 		return;
 	if (blocks.at(0) != "l")
 		return;
@@ -58,7 +58,7 @@ void toLight(const std::vector<std::string>& blocks, std::vector<Light>& lights)
 }
 
 void toSphere(const std::vector<std::string>& blocks, std::vector<Sphere>& spheres) {
-	if (blocks.size() != 3)
+	if (blocks.size() != 4)
 		return;
 	if (blocks.at(0) != "sp")
 		return;
@@ -75,9 +75,9 @@ void toSphere(const std::vector<std::string>& blocks, std::vector<Sphere>& spher
 }
 
 void toCamera(const std::vector<std::string>& blocks, Camera& camera) {
-	if (blocks.size() != 3)
+	if (blocks.size() != 4)
 		return;
-	if (blocks.at(0) != "l")
+	if (blocks.at(0) != "c")
 		return;
 	Vec3 origin;
 	if (!toVec3(origin, blocks.at(1)))

@@ -31,15 +31,7 @@ Scene::Scene(const std::string& path) {
 }
 
 Hit Scene::hit(const Ray& ray, const std::set<ID>& ignore) const {
-	Hit hits[] = {
-		hitShape(_spheres, ray, ignore),
-		hitShape(_triangles, ray, ignore),
-	};
-	Hit hit(false);
-	for (size_t i = 0; i < sizeof(hits) / sizeof(Hit); i++) {
-		if (hits[i].hit && (!hit.hit || hits[i].dist < hit.dist))
-			hit = hits[i];
-	}
+	Hit hit = hitShape(_spheres, ray, ignore);
 	return hit;
 }
 
@@ -56,11 +48,11 @@ Rgb Scene::getColor(const Ray& ray) const {
 		return _backgroundColor;
 	ignore.insert(hit.id);
 	Rgb lightAccumulator = Rgb(0, 0, 0);
-	for (std::vector<const Light>::iterator light = _lights.begin(); light != _lights.end(); ++light) {
-		if (!isClearPath(ignore, hit.point, *light))
+	for (auto& light : _lights) {
+		if (!isClearPath(ignore, hit.point, light))
 			continue;
-		float relativeIntensity = light->relativeIntensity(hit.point, hit.normal);
-		lightAccumulator.add(light->_color, relativeIntensity);
+		float relativeIntensity = light.relativeIntensity(hit.point, hit.normal);
+		lightAccumulator.add(light._color, relativeIntensity);
 	}
 	return mixColor(lightAccumulator, hit.color);
 }

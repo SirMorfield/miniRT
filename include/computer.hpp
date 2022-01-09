@@ -24,12 +24,12 @@ class Scene {
 
 template <class T>
 Hit hitShape(const std::vector<T>& objects, const Ray& ray, const std::set<ID>& ignore) {
-	for (typename std::vector<const T>::iterator it = objects.begin(); it != objects.end(); ++it) {
-		if (ignore.find(it->id) != ignore.end())
+	for (auto& object : objects) {
+		if (ignore.find(object.id) != ignore.end())
 			continue;
-		Intersect intersect = it->intersect(ray);
+		Intersect intersect = object.intersect(ray);
 		if (intersect.hit)
-			return Hit(intersect.dist, intersect.point, intersect.normal, it->color, it->id);
+			return Hit(intersect.dist, intersect.point, intersect.normal, object.color, object.id);
 	}
 	return Hit(false);
 }
