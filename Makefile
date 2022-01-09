@@ -2,7 +2,7 @@
 NAME      		= miniRT
 
 CC          	= clang++
-CFLAGS      	= -Wall -Wextra -Werror -pedantic -std=c++11 -Wshadow
+CFLAGS      	= -Wall -Wextra  -pedantic -std=c++11 -Wshadow
 # CFLAGS      	= -Wall -Wextra -Werror -Wuninitialized -O3
 
 SRCEXT      	= cpp

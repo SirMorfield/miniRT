@@ -9,6 +9,9 @@ test/
 scene.bmp
 .vscode/
 
+/rt/
+/rt_test/
+
 # swift
 *.dylib
 *~
