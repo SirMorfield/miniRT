@@ -31,8 +31,16 @@ Scene::Scene(const std::string& path) {
 }
 
 Hit Scene::hit(const Ray& ray, const std::set<ID>& ignore) const {
-	Hit hit = hitShape(_spheres, ray, ignore);
-	return hit;
+	Hit hits[] = {
+		hitShape(_spheres, ray, ignore),
+		hitShape(_triangles, ray, ignore),
+	};
+	Hit hit(false);
+	for (size_t i = 0; i < sizeof(hits) / sizeof(Hit); i++) {
+		if (hits[i].hit && (!hit.hit || hits[i].dist < hit.dist))
+			hit = hits[i];
+	}
+	return hitShape(_triangles, ray, ignore);
 }
 
 bool Scene::isClearPath(const std::set<ID>& ignore, const Vec3& point, const Light& light) const {
