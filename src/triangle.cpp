@@ -36,6 +36,6 @@ Intersect Triangle::intersect(const Ray& ray) const {
 	Intersect intersect(true);
 	intersect.dist = length(scale(ray.dir, t));
 	intersect.point = scale(ray.origin, intersect.dist);
-	intersect.normal = normal;
+	intersect.normal = correct_normal(normal, ray);
 	return (intersect);
 }

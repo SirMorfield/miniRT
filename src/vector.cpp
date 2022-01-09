@@ -1,5 +1,6 @@
 // this will be removed
 #include "vector.hpp"
+#include "util.hpp"
 #include <cmath>
 
 void normalize(Vec3* v) {
@@ -84,4 +85,12 @@ Vec3 add(Vec3 a, Vec3 b) {
 	v.y = a.y + b.y;
 	v.z = a.z + b.z;
 	return (v);
+}
+
+Vec3 correct_normal(const Vec3& normal, const Ray& ray) {
+	const Vec3 inverse = scale(normal, -1);
+	if (dot(normal, ray.dir) < dot(inverse, ray.dir))
+		return inverse;
+	else
+		return normal;
 }

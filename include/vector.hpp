@@ -1,6 +1,7 @@
 #pragma once
 #include "types.hpp"
 class Vec3;
+class Ray;
 void  normalize(Vec3* v);
 Vec3  unit(Vec3 v);
 Vec3  subtract(Vec3 a, Vec3 b);
@@ -12,3 +13,4 @@ float length(Vec3 v);
 float dot(Vec3 a, Vec3 b);
 Vec3  cross(Vec3 a, Vec3 b);
 Vec3  add(Vec3 a, Vec3 b);
+Vec3  correct_normal(const Vec3& normal, const Ray& ray);
