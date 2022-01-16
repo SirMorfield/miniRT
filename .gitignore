@@ -8,6 +8,7 @@ a.out
 test/
 scene.bmp
 .vscode/
+test.*
 
 /rt/
 /rt_test/

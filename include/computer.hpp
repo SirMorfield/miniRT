@@ -4,6 +4,7 @@
 #include "types.hpp"
 #include "util.hpp"
 #include <set>
+#include <thread>
 #include <vector>
 
 class Scene {
@@ -34,16 +35,33 @@ Hit hitShape(const std::vector<T>& objects, const Ray& ray, const std::set<ID>& 
 	return Hit(false);
 }
 
-class Renderer {
+class FrameBuffer {
   public:
-	Renderer(size_t xSize, size_t ySize);
-	void render(const Scene& scene);
+	FrameBuffer(size_t xSize, size_t ySize);
+	bool getPixel(size_t& x, size_t& y);
+	void setPixel(const Rgb& color, size_t x, size_t y);
 	void saveToBMP();
 
   private:
-	Ray				 _rayFromPixel(const Camera& camera, float x, float y);
+	size_t			 _maxI;
 	size_t			 _xSize;
 	size_t			 _ySize;
-	float			 _aspectRatio;
+	size_t			 _i;
+	std::mutex		 _mutex;
 	std::vector<Rgb> _frame;
+
+	// disabled
+	FrameBuffer();
+};
+
+class Renderer {
+  public:
+	Renderer(size_t xSize, size_t ySize);
+	void thread(const Scene& scene, FrameBuffer* fb);
+
+  private:
+	Ray	   _rayFromPixel(const Camera& camera, float x, float y) const;
+	size_t _xSize;
+	size_t _ySize;
+	float  _aspectRatio;
 };
