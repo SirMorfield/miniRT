@@ -44,9 +44,12 @@ Hit Scene::hit(const Ray& ray, const std::set<ID>& ignore) const {
 }
 
 bool Scene::isClearPath(const std::set<ID>& ignore, const Vec3& point, const Light& light) const {
-	Ray toLight(point, unit(subtract(light._origin, point)));
+	Vec3 v = light._origin - point;
+	v.normalize();
+	Ray toLight(point, v);
+
 	Hit hit = Scene::hit(toLight, ignore);
-	return !hit.hit || hit.dist * hit.dist > distance2(light._origin, point);
+	return !hit.hit || hit.dist * hit.dist > light._origin.distance2(point);
 }
 
 Rgb Scene::getColor(const Ray& ray) const {

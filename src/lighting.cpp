@@ -16,8 +16,9 @@ void Rgb::add(const Rgb& color, float intensity) {
 Light::Light(const Rgb& color, const Vec3& origin, float brightness) : _color(color), _origin(origin), _brightness(brightness) {}
 
 float Light::relativeIntensity(const Vec3& point, const Vec3& normal) const {
-	Vec3  to_light = unit(subtract(_origin, point));
-	float intensity = 1 * _brightness * std::max(dot(normal, to_light), 0.0f);
+	Vec3 to_light = _origin - point;
+	to_light.normalize();
+	float intensity = 1 * _brightness * std::max(normal.dot(to_light), 0.0f);
 	return std::min(intensity, 1.0f);
 }
 

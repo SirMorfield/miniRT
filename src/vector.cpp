@@ -3,94 +3,78 @@
 #include "util.hpp"
 #include <cmath>
 
-void normalize(Vec3* v) {
-	float inv_len = 1 / std::sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
-	v->x *= inv_len;
-	v->y *= inv_len;
-	v->z *= inv_len;
-}
-
-Vec3 unit(Vec3 v) {
-	normalize(&v);
-	return (v);
-}
-
-// = a - b || to, from
-Vec3 subtract(Vec3 a, Vec3 b) {
-	Vec3 v;
-
-	v.x = a.x - b.x;
-	v.y = a.y - b.y;
-	v.z = a.z - b.z;
-	return (v);
-}
-
-Vec3 scale(Vec3 v, float r) {
-	Vec3 vec;
-
-	vec.x = v.x * r;
-	vec.y = v.y * r;
-	vec.z = v.z * r;
-	return (vec);
-}
-
-// Get point t distance away from origin in direction of (normalized) dir
-
-Vec3 translate(Vec3 origin, Vec3 dir, float t) {
-	return (add(origin, scale(dir, t)));
-}
-
 // The (always positive) squared distance between a and b
-
 float distance2(Vec3 a, Vec3 b) {
-	Vec3 ab;
-
-	ab = subtract(a, b);
-	return (ab.x * ab.x + ab.y * ab.y + ab.z * ab.z);
+	Vec3 ab = a - b;
+	return ab.x * ab.x + ab.y * ab.y + ab.z * ab.z;
 }
 
 // The (always positive) distance between a and b
-
 float distance(Vec3 a, Vec3 b) {
-	return (sqrt(distance2(a, b)));
-}
-
-float length(Vec3 v) {
-	return (sqrt(v.x * v.x + v.y * v.y + v.z * v.z));
-}
-
-// @return product of the Euclidean magnitudes of the two vectors
-// and the cosine of the angle between them.
-// = length(a) * length(b) * cos(alpha)
-
-float dot(Vec3 a, Vec3 b) {
-	return (a.x * b.x + a.y * b.y + a.z * b.z);
-}
-
-// @return vector orthogonal (perpendicular) to a and b
-
-Vec3 cross(Vec3 a, Vec3 b) {
-	Vec3 v;
-
-	v.x = a.y * b.z - a.z * b.y;
-	v.y = a.z * b.x - a.x * b.z;
-	v.z = a.x * b.y - a.y * b.x;
-	return (v);
-}
-
-Vec3 add(Vec3 a, Vec3 b) {
-	Vec3 v;
-
-	v.x = a.x + b.x;
-	v.y = a.y + b.y;
-	v.z = a.z + b.z;
-	return (v);
+	return std::sqrt(distance2(a, b));
 }
 
 Vec3 correct_normal(const Vec3& normal, const Ray& ray) {
-	const Vec3 inverse = scale(normal, -1);
-	if (dot(normal, ray.dir) < dot(inverse, ray.dir))
+	const Vec3 inverse = normal * -1.0f;
+	if (normal.dot(ray.dir) < inverse.dot(ray.dir))
 		return inverse;
 	else
 		return normal;
+}
+
+Vec3::Vec3() {}
+Vec3::~Vec3() {}
+
+Vec3::Vec3(float x, float y, float z) : x(x), y(y), z(z) {
+}
+
+Vec3& Vec3::operator=(const Vec3& cp) {
+	this->x = cp.x;
+	this->y = cp.y;
+	this->z = cp.z;
+	return *this;
+}
+
+Vec3::Vec3(const Vec3& cp) {
+	*this = cp;
+}
+
+Vec3 Vec3::operator+(const Vec3& cp) const { return Vec3(x + cp.x, y + cp.y, z + cp.z); }
+Vec3 Vec3::operator-(const Vec3& cp) const { return Vec3(x - cp.x, y - cp.y, z - cp.z); }
+Vec3 Vec3::operator*(const Vec3& cp) const { return Vec3(x * cp.x, y * cp.y, z * cp.z); }
+Vec3 Vec3::operator/(const Vec3& cp) const { return Vec3(x / cp.x, y / cp.y, z / cp.z); }
+
+Vec3 Vec3::operator+(float f) const { return Vec3(x + f, y + f, z + f); }
+Vec3 Vec3::operator-(float f) const { return Vec3(x - f, y - f, z - f); }
+Vec3 Vec3::operator*(float f) const { return Vec3(x * f, y * f, z * f); }
+Vec3 Vec3::operator/(float f) const { return Vec3(x / f, y / f, z / f); }
+
+Vec3	   Vec3::cross(const Vec3& v) const { return Vec3(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x); }
+float	   Vec3::dot(const Vec3& v) const { return x * v.x + y * v.y + z * v.z; }
+
+//
+void Vec3::normalize() {
+	float invLen = 1 / std::sqrt(x * x + y * y + z * z);
+	x *= invLen;
+	y *= invLen;
+	z *= invLen;
+}
+float Vec3::length2() const { return x * x + y * y + z * z; }
+float Vec3::length() const { return std::sqrt(length2()); }
+
+float Vec3::distance2(const Vec3& v) const {
+	Vec3 ab = *this - v;
+	return ab.x * ab.x + ab.y * ab.y + ab.z * ab.z;
+}
+float Vec3::distance(const Vec3& v) const { return std::sqrt(distance2(v)); }
+
+void  Vec3::translate(const Vec3& dir, float t) {
+	 x += dir.x * t;
+	 y += dir.y * t;
+	 z += dir.z * t;
+}
+
+std::ostream& operator<<(std::ostream& o, const Vec3& v) {
+	o << v.x << ", " << v.y << ", " << v.z << " ";
+	return o;
 }

@@ -10,11 +10,11 @@ Sphere::Sphere(const Vec3& origin, const Rgb& color, float radius) {
 }
 
 Quadradic Sphere::_get_intersections(const Ray& ray) const {
-	Vec3  l = subtract(ray.origin, _origin);
-	float a = dot(ray.dir, ray.dir);
-	float b = 2 * dot(ray.dir, l);
-	float c = dot(l, l) - _radius * _radius;
-	return (solve_quadratic(a, b, c));
+	Vec3  l = ray.origin - _origin;
+	float a = ray.dir.dot(ray.dir);
+	float b = 2 * ray.dir.dot(l);
+	float c = l.dot(l) - _radius * _radius;
+	return solve_quadratic(a, b, c);
 }
 
 // see doc/rayspherecases.png
@@ -34,10 +34,12 @@ Intersect Sphere::intersect(const Ray& ray) const {
 	hit.dist = actual_t(q.x0, q.x1);
 	if (hit.dist < 0)
 		return Intersect(false);
-	hit.point = translate(ray.origin, ray.dir, hit.dist);
-	if (distance2(ray.origin, _origin) > _radius * _radius)
-		hit.normal = unit(subtract(hit.point, _origin));
+	hit.point = ray.origin;
+	hit.point.translate(ray.dir, hit.dist);
+	if (ray.origin.distance2(_origin) > _radius * _radius)
+		hit.normal = hit.point - _origin;
 	else
-		hit.normal = unit(subtract(_origin, hit.point));
+		hit.normal = _origin - hit.point;
+	hit.normal.normalize();
 	return hit;
 }

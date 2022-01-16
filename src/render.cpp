@@ -50,10 +50,10 @@ Ray Renderer::_rayFromPixel(const Camera& camera, float x, float y) const {
 	if (camera._dir.x == 0.0 && camera._dir.z == 0.0)
 		positiveX = Vec3(1.0, 0.0, 0.0);
 	else
-		positiveX = cross(camera._dir, Vec3(0.0, 1.0, 0.0));
-	Vec3 negativeY = cross(camera._dir, positiveX);
-	ray.dir = add(add(scale(positiveX, px), scale(negativeY, py)), camera._dir);
-	normalize(&ray.dir);
+		positiveX = camera._dir.cross(Vec3(0.0, 1.0, 0.0));
+	Vec3 negativeY = camera._dir.cross(positiveX);
+	ray.dir = ((positiveX * px) + (negativeY * py)) + camera._dir;
+	ray.dir.normalize();
 	return ray;
 }
 
