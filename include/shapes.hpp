@@ -36,3 +36,14 @@ class Triangle : public Shape {
 	Vec3 edge2;
 	Vec3 normal;
 };
+
+class AABB {
+  public:
+	AABB(const Vec3& min, const Vec3& max);
+	bool intersect(const Ray& ray) const;
+	bool isInside(const Vec3& p) const;
+
+  private:
+	Vec3 _min;
+	Vec3 _max;
+};
