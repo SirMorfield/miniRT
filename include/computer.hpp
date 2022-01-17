@@ -3,6 +3,7 @@
 #include "shapes.hpp"
 #include "types.hpp"
 #include "util.hpp"
+#include <mutex>
 #include <set>
 #include <thread>
 #include <vector>
