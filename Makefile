@@ -2,7 +2,7 @@
 NAME      		= miniRT
 
 CC          	= clang++
-CFLAGS      	= -Wall -Wextra  -pedantic -std=c++11 -Wshadow
+CFLAGS      	= -Wall -Wextra  -pedantic -std=c++11 -Wshadow -O3
 # CFLAGS      	= -Wall -Wextra -Werror -Wuninitialized -O3
 
 SRCEXT      	= cpp
@@ -14,7 +14,7 @@ BUILDDIR    	= obj
 
 LIBS			=
 INCLUDES		= -I$(HEADERDIR)
-LINK			=
+LINK			= -lpthread
 
 OBJ_IN_DIR 		= $(BUILDDIR)/*.$(OBJEXT)
 SRC 			= $(wildcard $(SRCDIR)/*.$(SRCEXT))
