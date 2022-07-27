@@ -8,7 +8,7 @@ int main(int argc, char* argv[]) {
 
 	std::string				 path = argc >= 2 ? argv[1] : "rt_test/basic_sphere.rt";
 	Scene					 scene(path);
-	FrameBuffer				 fb(xSize, ySize);
+	Frame_buffer			 fb(xSize, ySize);
 	Renderer				 renderer(xSize, ySize);
 	std::vector<std::thread> threads(7);
 
@@ -17,6 +17,6 @@ int main(int argc, char* argv[]) {
 	for (auto& th : threads)
 		th.join();
 
-	fb.saveToBMP();
+	fb.save_to_BMP();
 	return 0;
 }

@@ -1,4 +1,4 @@
 #pragma once
 #include "types.hpp"
 
-Rgb mixColor(const Rgb& light, const Rgb& surface);
+Rgb mix_color(const Rgb& light, const Rgb& surface);

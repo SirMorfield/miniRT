@@ -44,7 +44,7 @@ bool AABB::intersect(const Ray& ray) const {
 	return tmax > 0;
 }
 
-bool AABB::isInside(const Vec3& p) const {
+bool AABB::is_inside(const Vec3& p) const {
 	return (p.x >= _min.x && p.x <= _max.x) &&
 		   (p.y >= _min.y && p.y <= _max.y) &&
 		   (p.z >= _min.z && p.z <= _max.z);

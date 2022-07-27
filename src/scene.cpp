@@ -22,28 +22,28 @@ Scene::Scene(const std::string& path) {
 	std::string line;
 	while (std::getline(file, line)) {
 		std::vector<std::string> blocks = split(line, ' ');
-		toLight(blocks, _lights);
-		toCamera(blocks, _camera);
-		toSphere(blocks, _spheres);
-		toTriangle(blocks, _triangles);
+		to_light(blocks, _lights);
+		to_camera(blocks, _camera);
+		to_sphere(blocks, _spheres);
+		to_triangle(blocks, _triangles);
 	}
 	file.close();
 }
 
 Hit Scene::hit(const Ray& ray, const std::set<ID>& ignore) const {
 	Hit hits[] = {
-		hitShape(_spheres, ray, ignore),
-		hitShape(_triangles, ray, ignore),
+		hit_shape(_spheres, ray, ignore),
+		hit_shape(_triangles, ray, ignore),
 	};
 	Hit hit(false);
 	for (size_t i = 0; i < sizeof(hits) / sizeof(Hit); i++) {
 		if (hits[i].hit && (!hit.hit || hits[i].dist < hit.dist))
 			hit = hits[i];
 	}
-	return hitShape(_triangles, ray, ignore);
+	return hit_shape(_triangles, ray, ignore);
 }
 
-bool Scene::isClearPath(const std::set<ID>& ignore, const Vec3& point, const Light& light) const {
+bool Scene::is_clear_path(const std::set<ID>& ignore, const Vec3& point, const Light& light) const {
 	Vec3 v = light._origin - point;
 	v.normalize();
 	Ray toLight(point, v);
@@ -52,7 +52,7 @@ bool Scene::isClearPath(const std::set<ID>& ignore, const Vec3& point, const Lig
 	return !hit.hit || hit.dist * hit.dist > light._origin.distance2(point);
 }
 
-Rgb Scene::getColor(const Ray& ray) const {
+Rgb Scene::get_color(const Ray& ray) const {
 	std::set<ID> ignore;
 	Hit			 hit = this->hit(ray, ignore);
 	if (!hit.hit)
@@ -60,10 +60,10 @@ Rgb Scene::getColor(const Ray& ray) const {
 	ignore.insert(hit.id);
 	Rgb lightAccumulator = Rgb(0, 0, 0);
 	for (auto& light : _lights) {
-		if (!isClearPath(ignore, hit.point, light))
+		if (!is_clear_path(ignore, hit.point, light))
 			continue;
-		float relativeIntensity = light.relativeIntensity(hit.point, hit.normal);
+		float relativeIntensity = light.relative_intensity(hit.point, hit.normal);
 		lightAccumulator.add(light._color, relativeIntensity);
 	}
-	return mixColor(lightAccumulator, hit.color);
+	return mix_color(lightAccumulator, hit.color);
 }

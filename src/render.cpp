@@ -4,20 +4,20 @@
 #include "util.hpp"
 #include <cmath>
 
-FrameBuffer::FrameBuffer(size_t xSize, size_t ySize) {
-	_ySize = ySize;
-	_xSize = xSize;
-	_maxI = xSize * ySize;
+Frame_buffer::Frame_buffer(size_t xSize, size_t ySize) {
+	_y_size = ySize;
+	_x_size = xSize;
+	_max_i = xSize * ySize;
 	_frame.reserve(xSize * ySize);
 	_i = 0;
 }
 
-bool FrameBuffer::getPixel(size_t& x, size_t& y) {
+bool Frame_buffer::get_pixel(size_t& x, size_t& y) {
 	bool success;
 	_mutex.lock();
-	if (_i < _maxI) {
-		x = _i % _xSize;
-		y = _i / _xSize;
+	if (_i < _max_i) {
+		x = _i % _x_size;
+		y = _i / _x_size;
 		_i++;
 		success = true;
 	}
@@ -27,24 +27,24 @@ bool FrameBuffer::getPixel(size_t& x, size_t& y) {
 	return success;
 }
 
-void FrameBuffer::setPixel(const Rgb& color, size_t x, size_t y) {
-	_frame[y * _xSize + x] = color;
+void Frame_buffer::set_pixel(const Rgb& color, size_t x, size_t y) {
+	_frame[y * _x_size + x] = color;
 }
 
-void FrameBuffer::saveToBMP() {
-	save_bmp(_xSize, _ySize, _frame, "scene.bmp");
+void Frame_buffer::save_to_BMP() {
+	save_bmp(_x_size, _y_size, _frame, "scene.bmp");
 }
 
 Renderer::Renderer(size_t xSize, size_t ySize) {
-	_xSize = xSize;
-	_ySize = ySize;
-	_aspectRatio = (float)_xSize / _ySize;
+	_x_size = xSize;
+	_y_size = ySize;
+	_aspect_ratio = (float)_x_size / _y_size;
 }
 
-Ray Renderer::_rayFromPixel(const Camera& camera, float x, float y) const {
+Ray Renderer::ray_from_pixel(const Camera& camera, float x, float y) const {
 	float fov = tan(camera._fov * 0.5);
-	float px = (2 * x / _xSize - 1) * _aspectRatio * fov;
-	float py = (2 * y / (float)_ySize - 1) * fov;
+	float px = (2 * x / _x_size - 1) * _aspect_ratio * fov;
+	float py = (2 * y / (float)_y_size - 1) * fov;
 	Ray	  ray;
 	ray.origin = camera._pos;
 	Vec3 positiveX;
@@ -58,12 +58,12 @@ Ray Renderer::_rayFromPixel(const Camera& camera, float x, float y) const {
 	return ray;
 }
 
-void Renderer::thread(const Scene& scene, FrameBuffer* fb) {
+void Renderer::thread(const Scene& scene, Frame_buffer* fb) {
 	size_t x;
 	size_t y;
-	while (fb->getPixel(x, y)) {
-		Ray ray = _rayFromPixel(scene._camera, x, y);
-		Rgb color = scene.getColor(ray);
-		fb->setPixel(color, x, y);
+	while (fb->get_pixel(x, y)) {
+		Ray ray = ray_from_pixel(scene._camera, x, y);
+		Rgb color = scene.get_color(ray);
+		fb->set_pixel(color, x, y);
 	}
 }

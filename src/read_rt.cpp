@@ -40,7 +40,7 @@ bool toFloat(float& f, const std::string& s) {
 	}
 }
 
-void toLight(const std::vector<std::string>& blocks, std::vector<Light>& lights) {
+void to_light(const std::vector<std::string>& blocks, std::vector<Light>& lights) {
 	if (blocks.size() != 4)
 		return;
 	if (blocks.at(0) != "l")
@@ -57,7 +57,7 @@ void toLight(const std::vector<std::string>& blocks, std::vector<Light>& lights)
 	lights.push_back(Light(color, origin, brightness));
 }
 
-void toSphere(const std::vector<std::string>& blocks, std::vector<Sphere>& spheres) {
+void to_sphere(const std::vector<std::string>& blocks, std::vector<Sphere>& spheres) {
 	if (blocks.size() != 4)
 		return;
 	if (blocks.at(0) != "sp")
@@ -74,7 +74,7 @@ void toSphere(const std::vector<std::string>& blocks, std::vector<Sphere>& spher
 	spheres.push_back(Sphere(origin, color, radius));
 }
 
-void toCamera(const std::vector<std::string>& blocks, Camera& camera) {
+void to_camera(const std::vector<std::string>& blocks, Camera& camera) {
 	if (blocks.size() != 4)
 		return;
 	if (blocks.at(0) != "c")
@@ -91,7 +91,7 @@ void toCamera(const std::vector<std::string>& blocks, Camera& camera) {
 	camera = Camera(origin, dir, radians(fov));
 }
 
-void toTriangle(const std::vector<std::string>& blocks, std::vector<Triangle>& triangles) {
+void to_triangle(const std::vector<std::string>& blocks, std::vector<Triangle>& triangles) {
 	if (blocks.size() != 5)
 		return;
 	if (blocks.at(0) != "tr")

@@ -15,7 +15,7 @@ void Rgb::add(const Rgb& color, float intensity) {
 
 Light::Light(const Rgb& color, const Vec3& origin, float brightness) : _color(color), _origin(origin), _brightness(brightness) {}
 
-float Light::relativeIntensity(const Vec3& point, const Vec3& normal) const {
+float Light::relative_intensity(const Vec3& point, const Vec3& normal) const {
 	Vec3 to_light = _origin - point;
 	to_light.normalize();
 	float intensity = 1 * _brightness * std::max(normal.dot(to_light), 0.0f);
@@ -23,7 +23,7 @@ float Light::relativeIntensity(const Vec3& point, const Vec3& normal) const {
 }
 
 // other
-Rgb mixColor(const Rgb& light, const Rgb& surface) {
+Rgb mix_color(const Rgb& light, const Rgb& surface) {
 	return Rgb(std::round(light.r * (surface.r / 255.0)),
 			   std::round(light.g * (surface.g / 255.0)),
 			   std::round(light.b * (surface.b / 255.0)));

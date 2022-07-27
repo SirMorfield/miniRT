@@ -52,7 +52,7 @@ class Hit : public Intersect {
 class Light {
   public:
 	Light(const Rgb& color, const Vec3& origin, float brightness);
-	float relativeIntensity(const Vec3& point, const Vec3& normal) const;
+	float relative_intensity(const Vec3& point, const Vec3& normal) const;
 
 	//   private:
 	Rgb	  _color;

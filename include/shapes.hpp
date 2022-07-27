@@ -19,7 +19,7 @@ class Sphere : public Shape {
   private:
 	Vec3	  _origin;
 	float	  _radius;
-	Quadradic _get_intersections(const Ray& ray) const;
+	Quadradic get_intersections(const Ray& ray) const;
 };
 
 class Triangle : public Shape {
@@ -41,7 +41,7 @@ class AABB {
   public:
 	AABB(const Vec3& min, const Vec3& max);
 	bool intersect(const Ray& ray) const;
-	bool isInside(const Vec3& p) const;
+	bool is_inside(const Vec3& p) const;
 
   private:
 	Vec3 _min;
