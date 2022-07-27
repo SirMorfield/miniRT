@@ -36,7 +36,8 @@ $(NAME): $(BUILDDIR)/ $(OBJ) $(HEADERS)
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ_IN_DIR) $(LIBS) -o $(NAME) $(LINK)
 
 $(BUILDDIR)/%.$(OBJEXT): %.$(SRCEXT) $(HEADERS)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(BUILDDIR)/$(notdir $@)
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(BUILDDIR)/$(notdir $@)
+	@printf '\r\033[1A\033[0K$@ Compiled $(BUILDDIR)/$(notdir $@)\n'
 # sources
 
 
