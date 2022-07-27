@@ -1,4 +1,5 @@
 #pragma once
+#include "helpers.hpp"
 #include "lighting.hpp"
 #include "types.hpp"
 #include "util.hpp"

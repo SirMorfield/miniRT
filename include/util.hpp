@@ -4,13 +4,6 @@
 #include <optional>
 #include <sstream>
 
-typedef struct {
-	bool  solved;
-	float x0;
-	float x1;
-} Quadradic;
-Quadradic solve_quadratic(float a, float b, float c);
-
 template <class T>
 T radians(T degrees) {
 	return degrees * 3.141592653589793 / 180;
