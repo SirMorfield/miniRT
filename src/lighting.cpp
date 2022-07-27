@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <cmath>
 
-//Rgb::
+// Rgb::
 Rgb::Rgb(uint8_t r, uint8_t g, uint8_t b) : r(r), g(g), b(b) {}
 
 void Rgb::add(const Rgb& color, float intensity) {

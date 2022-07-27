@@ -20,7 +20,8 @@ bool FrameBuffer::getPixel(size_t& x, size_t& y) {
 		y = _i / _xSize;
 		_i++;
 		success = true;
-	} else
+	}
+	else
 		success = false;
 	_mutex.unlock();
 	return success;

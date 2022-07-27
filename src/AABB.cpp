@@ -8,14 +8,16 @@ bool AABB::intersect(const Ray& ray) const {
 	if (ray.dir.x >= 0) {
 		tmin = (_min.x - ray.origin.x) / ray.dir.x;
 		tmax = (_max.x - ray.origin.x) / ray.dir.x;
-	} else {
+	}
+	else {
 		tmin = (_max.x - ray.origin.x) / ray.dir.x;
 		tmax = (_min.x - ray.origin.x) / ray.dir.x;
 	}
 	if (ray.dir.y >= 0) {
 		tymin = (_min.y - ray.origin.y) / ray.dir.y;
 		tymax = (_max.y - ray.origin.y) / ray.dir.y;
-	} else {
+	}
+	else {
 		tymin = (_max.y - ray.origin.y) / ray.dir.y;
 		tymax = (_min.y - ray.origin.y) / ray.dir.y;
 	}
@@ -28,7 +30,8 @@ bool AABB::intersect(const Ray& ray) const {
 	if (ray.dir.z >= 0) {
 		tzmin = (_min.z - ray.origin.z) / ray.dir.z;
 		tzmax = (_max.z - ray.origin.z) / ray.dir.z;
-	} else {
+	}
+	else {
 		tzmin = (_max.z - ray.origin.z) / ray.dir.z;
 		tzmax = (_min.z - ray.origin.z) / ray.dir.z;
 	}

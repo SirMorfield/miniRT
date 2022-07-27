@@ -13,7 +13,8 @@ Quadradic solve_quadratic(float a, float b, float c) {
 	if (discr == 0) {
 		result.x0 = -0.5 * b / a;
 		result.x1 = -0.5 * b / a;
-	} else {
+	}
+	else {
 		float q;
 		if (b > 0)
 			q = -0.5 * (b + sqrt(discr));
