@@ -13,6 +13,17 @@ Scene::Scene() : resolution(100, 100) {
 	_camera = Camera(Vec3(0.0f, 0.0f, 2.0f), Vec3(0.0f, 0.0f, -1.0f), 10.0f);
 }
 
+bool is_comment(const std::string& line) {
+	for (size_t i = 0; i < line.size(); i++) {
+		if (line[i] == '#')
+			return true;
+
+		if (!std::isspace(line[i]))
+			break;
+	}
+	return false;
+}
+
 Scene::Scene(const std::string& path) : resolution(100, 100) {
 	_backgroundColor = Rgb(0, 0, 0);
 
@@ -21,6 +32,8 @@ Scene::Scene(const std::string& path) : resolution(100, 100) {
 		throw "file not found";
 	std::string line;
 	while (std::getline(file, line)) {
+		if (is_comment(line))
+			continue;
 		std::vector<std::string> blocks = split(line, ' ');
 		to_light(blocks, _lights);
 		to_camera(blocks, _camera);
