@@ -10,6 +10,7 @@ int main(int argc, char* argv[]) {
 	Renderer				 renderer(scene.resolution.width(), scene.resolution.height());
 	std::vector<std::thread> threads(7);
 
+	std::cout << scene << std::endl;
 	for (size_t i = 0; i < threads.capacity(); i++)
 		threads[i] = std::thread(&Renderer::thread, &renderer, scene, &fb);
 	for (auto& th : threads)

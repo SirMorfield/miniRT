@@ -23,7 +23,11 @@ class Scene {
 	std::vector<Triangle> _triangles;
 	std::vector<Light>	  _lights;
 	Rgb					  _backgroundColor;
+
+	friend std::ostream&  operator<<(std::ostream& o, const Scene& scene);
 };
+
+std::ostream& operator<<(std::ostream& o, const Scene& scene);
 
 template <class T>
 Hit hit_shape(const std::vector<T>& objects, const Ray& ray, const std::set<ID>& ignore) {

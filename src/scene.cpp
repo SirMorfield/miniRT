@@ -31,6 +31,16 @@ Scene::Scene(const std::string& path) : resolution(100, 100) {
 	file.close();
 }
 
+std::ostream& operator<<(std::ostream& o, const Scene& scene) {
+	o << "Scene:\n";
+	o << "  resolution: " << scene.resolution.width() << "x" << scene.resolution.height() << "\n";
+	o << "  pixels    : " << scene.resolution.width() * scene.resolution.height() << "\n";
+	o << "  lights    : " << scene._lights.size() << "\n";
+	o << "  spheres   : " << scene._spheres.size() << "\n";
+	o << "  triangles : " << scene._triangles.size() << "\n";
+	return o;
+}
+
 Hit Scene::hit(const Ray& ray, const std::set<ID>& ignore) const {
 	Hit hits[] = {
 		hit_shape(_spheres, ray, ignore),
