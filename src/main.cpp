@@ -1,8 +1,10 @@
 #include "computer.hpp"
 #include <iostream>
+#include <unistd.h>
 
 int main(int argc, char* argv[]) {
-	// Scene scene;
+	(void)argc;
+	(void)argv;
 
 	std::string				 path = argc >= 2 ? argv[1] : "rt_test/basic_sphere.rt";
 	Scene					 scene(path);
@@ -13,8 +15,11 @@ int main(int argc, char* argv[]) {
 	std::cout << scene << std::endl;
 	for (size_t i = 0; i < threads.capacity(); i++)
 		threads[i] = std::thread(&Renderer::thread, &renderer, scene, &fb);
+
+	Time time;
 	for (auto& th : threads)
 		th.join();
+	time.print();
 
 	fb.save_to_BMP();
 	return 0;

@@ -1,5 +1,6 @@
 #pragma once
 #include "types.hpp"
+#include <chrono>
 #include <functional>
 #include <optional>
 #include <sstream>
@@ -31,3 +32,24 @@ std::optional<T> parse_int(const std::string& str) {
 
 //
 std::vector<std::string> split(const std::string& s, char delim);
+// n
+
+std::string pad_start(const std::string& str, size_t length, char pad = ' ');
+
+class Time {
+  public:
+	typedef long long nanoseconds;
+
+	Time();
+
+	Time::nanoseconds end() const;
+	std::string		  endString() const;
+	std::string		  endFormatted() const;
+	std::string		  endFormatted(Time::nanoseconds duration) const;
+
+	void			  print() const;
+
+  private:
+	std::chrono::time_point<std::chrono::high_resolution_clock> _start;
+	//
+};
