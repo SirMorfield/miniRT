@@ -50,4 +50,4 @@ bool AABB::isInside(const Vec3& p) const {
 		   (p.z >= _min.z && p.z <= _max.z);
 }
 
-AABB::~AABB() {}
+// AABB::~AABB() {}
