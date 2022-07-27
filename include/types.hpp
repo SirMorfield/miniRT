@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#define EPSILON 1e-8
 
 class Rgb {
   public:
@@ -71,4 +72,15 @@ class Camera {
 	float _fov;
 };
 
-#define EPSILON 1e-8
+class Resolution {
+  public:
+	Resolution() = delete;
+	Resolution(size_t width, size_t height) : _width(width), _height(height) {}
+
+	size_t width() const { return _width; }
+	size_t height() const { return _height; }
+
+  private:
+	size_t _width;
+	size_t _height;
+};

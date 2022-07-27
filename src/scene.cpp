@@ -4,7 +4,7 @@
 #include <fstream>
 #include <functional>
 
-Scene::Scene() {
+Scene::Scene() : resolution(100, 100) {
 	_backgroundColor = Rgb(0, 0, 0);
 	Sphere sphere(Vec3(0.0f, 0.0f, 0.0f), Rgb(200, 200, 100), 1.0f);
 	_spheres.push_back(sphere);
@@ -13,7 +13,7 @@ Scene::Scene() {
 	_camera = Camera(Vec3(0.0f, 0.0f, 2.0f), Vec3(0.0f, 0.0f, -1.0f), 10.0f);
 }
 
-Scene::Scene(const std::string& path) {
+Scene::Scene(const std::string& path) : resolution(100, 100) {
 	_backgroundColor = Rgb(0, 0, 0);
 
 	std::ifstream file(path);
@@ -26,6 +26,7 @@ Scene::Scene(const std::string& path) {
 		to_camera(blocks, _camera);
 		to_sphere(blocks, _spheres);
 		to_triangle(blocks, _triangles);
+		to_resolution(blocks, resolution);
 	}
 	file.close();
 }

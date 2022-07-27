@@ -110,3 +110,17 @@ void to_triangle(const std::vector<std::string>& blocks, std::vector<Triangle>& 
 		return;
 	triangles.push_back(Triangle(color, p0, p1, p2));
 }
+
+void to_resolution(const std::vector<std::string>& blocks, Resolution& resolution) {
+	if (blocks.size() != 3)
+		return;
+	if (blocks.at(0) != "R")
+		return;
+	std::optional<size_t> width = parse_int<size_t>(blocks.at(1));
+	if (!width)
+		return;
+	std::optional<size_t> height = parse_int<size_t>(blocks.at(2));
+	if (!height)
+		return;
+	resolution = Resolution(*width, *height);
+}

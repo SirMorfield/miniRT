@@ -7,3 +7,4 @@ void to_light(const std::vector<std::string>& blocks, std::vector<Light>& lights
 void to_camera(const std::vector<std::string>& blocks, Camera& camera);
 void to_sphere(const std::vector<std::string>& blocks, std::vector<Sphere>& spheres);
 void to_triangle(const std::vector<std::string>& blocks, std::vector<Triangle>& triangles);
+void to_resolution(const std::vector<std::string>& blocks, Resolution& resolution);

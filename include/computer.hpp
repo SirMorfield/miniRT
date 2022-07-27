@@ -12,9 +12,10 @@ class Scene {
   public:
 	Scene();
 	Scene(const std::string& path);
-	Hit	   hit(const Ray& ray, const std::set<ID>& ignore) const;
-	Rgb	   get_color(const Ray& ray) const;
-	Camera _camera;
+	Hit		   hit(const Ray& ray, const std::set<ID>& ignore) const;
+	Rgb		   get_color(const Ray& ray) const;
+	Camera	   _camera;
+	Resolution resolution;
 
   private:
 	bool				  is_clear_path(const std::set<ID>& ignore, const Vec3& point, const Light& light) const;
