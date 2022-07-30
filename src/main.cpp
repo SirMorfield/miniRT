@@ -1,4 +1,5 @@
 #include "computer.hpp"
+#include "env.hpp"
 #include <iostream>
 #include <unistd.h>
 
@@ -10,9 +11,11 @@ int main(int argc, char* argv[]) {
 	Scene					 scene(path);
 	Frame_buffer			 fb(scene.resolution.width(), scene.resolution.height());
 	Renderer				 renderer(scene.resolution.width(), scene.resolution.height());
-	std::vector<std::thread> threads(7);
+	std::vector<std::thread> threads(env::threads);
 
 	std::cout << scene << std::endl;
+	env::print();
+
 	for (size_t i = 0; i < threads.capacity(); i++)
 		threads[i] = std::thread(&Renderer::thread, &renderer, scene, &fb);
 

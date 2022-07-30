@@ -1,10 +1,11 @@
 #include "computer.hpp"
+#include "env.hpp"
 #include "io.hpp"
 #include "types.hpp"
 #include <fstream>
 #include <functional>
 
-Scene::Scene() : resolution(100, 100) {
+Scene::Scene() : resolution(env::width, env::height) {
 	_backgroundColor = Rgb(0, 0, 0);
 	Sphere sphere(Vec3(0.0f, 0.0f, 0.0f), Rgb(200, 200, 100), 1.0f);
 	_spheres.push_back(sphere);
@@ -24,7 +25,7 @@ bool is_comment(const std::string& line) {
 	return false;
 }
 
-Scene::Scene(const std::string& path) : resolution(100, 100) {
+Scene::Scene(const std::string& path) : resolution(env::height, env::width) {
 	_backgroundColor = Rgb(0, 0, 0);
 
 	std::ifstream file(path);
@@ -39,7 +40,8 @@ Scene::Scene(const std::string& path) : resolution(100, 100) {
 		to_camera(blocks, _camera);
 		to_sphere(blocks, _spheres);
 		to_triangle(blocks, _triangles);
-		to_resolution(blocks, resolution);
+		if (env::read_resolution_from == Resolution_from::rt_file)
+			to_resolution(blocks, resolution);
 	}
 	file.close();
 }
