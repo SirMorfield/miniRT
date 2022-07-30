@@ -40,3 +40,9 @@ Intersect Triangle::intersect(const Ray& ray) const {
 	intersect.normal = correct_normal(normal, ray);
 	return (intersect);
 }
+
+bool Triangle::is_inside_AABB(const AABB& aabb) const {
+	return aabb.is_inside(p0) &&
+		   aabb.is_inside(p1) &&
+		   aabb.is_inside(p2);
+}

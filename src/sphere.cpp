@@ -43,3 +43,11 @@ Intersect Sphere::intersect(const Ray& ray) const {
 	hit.normal.normalize();
 	return hit;
 }
+
+bool Sphere::is_inside_AABB(const AABB& aabb) const {
+	if (!aabb.is_inside(_origin))
+		return false;
+
+	return _origin.distance2(aabb._min) > _radius * _radius &&
+		   _origin.distance2(aabb._max) > _radius * _radius;
+}

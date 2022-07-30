@@ -4,9 +4,12 @@
 #include "types.hpp"
 #include "util.hpp"
 
+class AABB;
+
 class Shape {
   public:
 	virtual Intersect intersect(const Ray& ray) const = 0;
+	virtual bool	  is_inside_AABB(const AABB& aabb) const = 0;
 	Rgb				  color;
 	ID				  id;
 };
@@ -15,6 +18,8 @@ class Sphere : public Shape {
   public:
 	Sphere(const Vec3& origin, const Rgb& color, float radius);
 	Intersect intersect(const Ray& ray) const;
+	bool	  is_inside_AABB(const AABB& aabb) const;
+
 	virtual ~Sphere() {}
 
   private:
@@ -27,6 +32,8 @@ class Triangle : public Shape {
   public:
 	Triangle(Rgb color, Vec3 p0, Vec3 p1, Vec3 p2);
 	Intersect intersect(const Ray& ray) const;
+	bool	  is_inside_AABB(const AABB& aabb) const;
+
 	virtual ~Triangle() {}
 
   private:
@@ -44,7 +51,7 @@ class AABB {
 	bool intersect(const Ray& ray) const;
 	bool is_inside(const Vec3& p) const;
 
-  private:
+	//   private:
 	Vec3 _min;
 	Vec3 _max;
 };
