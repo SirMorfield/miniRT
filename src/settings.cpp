@@ -4,7 +4,7 @@
 namespace env {
 
 // Allow non-normalized direction vector in .rt file? :boolean
-const uint64_t threads = 7;
+const uint64_t threads = 4;
 const bool	   allow_abnormal_dir = false;
 const bool	   log_progress = true;
 
@@ -13,8 +13,8 @@ const uint64_t		  anti_aliasing_level = 1;
 
 const Resolution_from read_resolution_from = Resolution_from::cpp_file;
 
-const uint64_t		  width = 300;
-const uint64_t		  height = 300;
+const uint64_t		  width = 400;
+const uint64_t		  height = 400;
 
 //
 void print() {
