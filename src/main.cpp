@@ -22,6 +22,7 @@ int main(int argc, char* argv[]) {
 	Time time;
 	for (auto& th : threads)
 		th.join();
+	std::cout << "Render time: " << std::ends;
 	time.print();
 
 	fb.save_to_BMP();
