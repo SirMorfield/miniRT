@@ -66,7 +66,7 @@ Hit Scene::hit(const Ray& ray, const std::set<ID>& ignore) const {
 		if (hits[i].hit && (!hit.hit || hits[i].dist < hit.dist))
 			hit = hits[i];
 	}
-	return hit_shape(_triangles, ray, ignore);
+	return hit;
 }
 
 bool Scene::is_clear_path(const std::set<ID>& ignore, const Vec3& point, const Light& light) const {

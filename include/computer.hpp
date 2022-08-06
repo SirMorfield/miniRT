@@ -1,10 +1,10 @@
 #pragma once
+#include "hit_shape.hpp"
 #include "lighting.hpp"
 #include "shapes.hpp"
 #include "types.hpp"
 #include "util.hpp"
 #include <mutex>
-#include <set>
 #include <thread>
 #include <vector>
 
@@ -28,18 +28,6 @@ class Scene {
 };
 
 std::ostream& operator<<(std::ostream& o, const Scene& scene);
-
-template <class T>
-Hit hit_shape(const std::vector<T>& objects, const Ray& ray, const std::set<ID>& ignore) {
-	for (auto& object : objects) {
-		if (ignore.find(object.id) != ignore.end())
-			continue;
-		Intersect intersect = object.intersect(ray);
-		if (intersect.hit)
-			return Hit(intersect.dist, intersect.point, intersect.normal, object.color, object.id);
-	}
-	return Hit(false);
-}
 
 class Frame_buffer {
   public:
