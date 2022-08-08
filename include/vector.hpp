@@ -5,6 +5,7 @@ class Vec3 {
   public:
 	Vec3();
 	Vec3(float x, float y, float z);
+	Vec3(float xyz);
 	Vec3& operator=(const Vec3& cp);
 	Vec3(const Vec3& cp);
 	~Vec3();

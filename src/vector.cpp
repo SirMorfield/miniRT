@@ -28,8 +28,8 @@ Vec3 correct_normal(const Vec3& normal, const Ray& ray) {
 Vec3::Vec3() {}
 Vec3::~Vec3() {}
 
-Vec3::Vec3(float x, float y, float z) : x(x), y(y), z(z) {
-}
+Vec3::Vec3(float x, float y, float z) : x(x), y(y), z(z) {}
+Vec3::Vec3(float xyz) : Vec3(xyz, xyz, xyz) {}
 
 Vec3& Vec3::operator=(const Vec3& cp) {
 	this->x = cp.x;
