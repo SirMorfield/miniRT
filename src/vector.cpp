@@ -3,6 +3,9 @@
 #include "util.hpp"
 #include <cmath>
 
+// TODO: look into
+// typedef float	vec3f __attribute__((vector_size(sizeof(float) * 4)));
+
 // The (always positive) squared distance between a and b
 float distance2(Vec3 a, Vec3 b) {
 	Vec3 ab = a - b;
