@@ -7,7 +7,16 @@ int main(int argc, char* argv[]) {
 	(void)argc;
 	(void)argv;
 
-	std::string				 path = argc >= 2 ? argv[1] : "rt_test/basic_sphere.rt";
+	std::string path;
+	if (argc == 2)
+		path = argv[1];
+	else if (argc == 1)
+		path = "rt_test/ball.rt";
+	else {
+		std::cout << "Usage: " << argv[0] << "[.rt file]" << std::endl;
+		exit(1);
+	}
+
 	Scene					 scene(path);
 	Frame_buffer			 fb(scene.resolution.width(), scene.resolution.height());
 	Renderer				 renderer(scene.resolution.width(), scene.resolution.height());
