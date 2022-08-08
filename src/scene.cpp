@@ -26,7 +26,7 @@ bool is_comment(const std::string& line) {
 	return false;
 }
 
-Scene::Scene(const std::string& path) : resolution(env::height, env::width) {
+Scene::Scene(const std::string& path) : resolution(env::width, env::height) {
 	_triangles = Octree<Triangle>(AABB(Vec3(-1000, -1000, -1000), Vec3(1000, 1000, 1000))); // TODO: make this dynamic
 
 	_backgroundColor = Rgb(0, 0, 0);
