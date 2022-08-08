@@ -14,3 +14,23 @@ Env
   anti_aliasing_level : 1
 
  0h  0m  9.909 583 375s
+
+
+Commit hash: 1170f9d662f78dec1309060cf3d9462d5a70355e
+Date       : Tue  9 Aug 2022 00:57:49 CEST
+uname -a   : Darwin macbook-pro 21.6.0 Darwin Kernel Version 21.6.0: Sat Jun 18 17:05:47 PDT 2022; root:xnu-8020.140.41~1/RELEASE_ARM64_T8101 arm64
+Command    : ./miniRT rt/dragon.rt
+Scene:
+  resolution: 400x400
+  pixels    : 160000
+  lights    : 3
+  spheres   : 0
+  triangles : 6222
+
+Env
+  threads             : 4
+  allow_abnormal_dir  : false
+  log_progress        : true
+  anti_aliasing_level : 1
+
+Render time:  0h  0m  0.525 344 000s
