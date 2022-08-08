@@ -38,6 +38,7 @@ class Octree {
 	bool insert(const T& shape) {
 		if (!shape.is_inside_AABB(this->_aabb))
 			return false;
+		_size++;
 
 		for (auto& child : this->_children) {
 			if (shape.is_inside_AABB(child._aabb)) {
@@ -51,7 +52,6 @@ class Octree {
 		}
 
 		this->_shapes.push_back(shape);
-		_size++;
 		return true;
 	}
 	// void push_back(const T& shape) { this->insert(shape); }
