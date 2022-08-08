@@ -51,6 +51,11 @@ class AABB {
 	bool intersect(const Ray& ray) const;
 	bool is_inside(const Vec3& p) const;
 
+	// subdivide space into  8 children
+	std::vector<AABB> subdivide() const;
+
+	// bool			  is_inside_AABB(const AABB& aabb) const; // TODO: instead of shape.is_inside_AABB(aabb)
+
 	//   private:
 	Vec3 _min;
 	Vec3 _max;

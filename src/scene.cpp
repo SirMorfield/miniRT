@@ -1,6 +1,7 @@
 #include "computer.hpp"
 #include "env.hpp"
 #include "io.hpp"
+#include "shapes.hpp"
 #include "types.hpp"
 #include <fstream>
 #include <functional>
@@ -26,6 +27,8 @@ bool is_comment(const std::string& line) {
 }
 
 Scene::Scene(const std::string& path) : resolution(env::height, env::width) {
+	_triangles = Octree<Triangle>(AABB(Vec3(-1000, -1000, -1000), Vec3(1000, 1000, 1000))); // TODO: make this dynamic
+
 	_backgroundColor = Rgb(0, 0, 0);
 
 	std::ifstream file(path);
@@ -59,7 +62,7 @@ std::ostream& operator<<(std::ostream& o, const Scene& scene) {
 Hit Scene::hit(const Ray& ray, const std::set<ID>& ignore) const {
 	Hit hits[] = {
 		hit_shape(_spheres, ray, ignore),
-		hit_shape(_triangles, ray, ignore),
+		_triangles.hit(ray),
 	};
 	Hit hit(false);
 	for (size_t i = 0; i < sizeof(hits) / sizeof(Hit); i++) {

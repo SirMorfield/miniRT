@@ -1,4 +1,5 @@
 #include "io.hpp"
+#include "octree.hpp"
 #include "shapes.hpp"
 #include "types.hpp"
 #include "util.hpp"
@@ -91,7 +92,7 @@ void to_camera(const std::vector<std::string>& blocks, Camera& camera) {
 	camera = Camera(origin, dir, radians(fov));
 }
 
-void to_triangle(const std::vector<std::string>& blocks, std::vector<Triangle>& triangles) {
+void to_triangle(const std::vector<std::string>& blocks, Octree<Triangle>& triangles) {
 	if (blocks.size() != 5)
 		return;
 	if (blocks.at(0) != "tr")
@@ -108,7 +109,7 @@ void to_triangle(const std::vector<std::string>& blocks, std::vector<Triangle>& 
 	Rgb color;
 	if (!toRgb(color, blocks.at(4)))
 		return;
-	triangles.push_back(Triangle(color, p0, p1, p2));
+	assert(triangles.insert(Triangle(color, p0, p1, p2)));
 }
 
 void to_resolution(const std::vector<std::string>& blocks, Resolution& resolution) {

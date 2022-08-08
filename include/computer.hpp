@@ -1,6 +1,7 @@
 #pragma once
 #include "hit_shape.hpp"
 #include "lighting.hpp"
+#include "octree.hpp"
 #include "shapes.hpp"
 #include "types.hpp"
 #include "util.hpp"
@@ -18,13 +19,13 @@ class Scene {
 	Resolution resolution;
 
   private:
-	bool				  is_clear_path(const std::set<ID>& ignore, const Vec3& point, const Light& light) const;
-	std::vector<Sphere>	  _spheres;
-	std::vector<Triangle> _triangles;
-	std::vector<Light>	  _lights;
-	Rgb					  _backgroundColor;
+	bool				 is_clear_path(const std::set<ID>& ignore, const Vec3& point, const Light& light) const;
+	std::vector<Sphere>	 _spheres;
+	Octree<Triangle>	 _triangles;
+	std::vector<Light>	 _lights;
+	Rgb					 _backgroundColor;
 
-	friend std::ostream&  operator<<(std::ostream& o, const Scene& scene);
+	friend std::ostream& operator<<(std::ostream& o, const Scene& scene);
 };
 
 std::ostream& operator<<(std::ostream& o, const Scene& scene);

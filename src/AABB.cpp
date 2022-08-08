@@ -50,4 +50,17 @@ bool AABB::is_inside(const Vec3& p) const {
 		   (p.z >= _min.z && p.z <= _max.z);
 }
 
+std::vector<AABB> AABB::subdivide() const {
+	const Vec3 center = (_min + _max) / 2;
+	return {
+		AABB(_min, center),
+		AABB(Vec3(center.x, _min.y, _min.z), Vec3(_max.x, center.y, center.z)),
+		AABB(Vec3(_min.x, center.y, _min.z), Vec3(center.x, _max.y, center.z)),
+		AABB(Vec3(center.x, center.y, _min.z), Vec3(_max.x, _max.y, center.z)),
+		AABB(Vec3(_min.x, _min.y, center.z), Vec3(center.x, center.y, _max.z)),
+		AABB(Vec3(center.x, _min.y, center.z), Vec3(_max.x, center.y, _max.z)),
+		AABB(Vec3(_min.x, center.y, center.z), Vec3(center.x, _max.y, _max.z)),
+		AABB(center, _max)};
+}
+
 // AABB::~AABB() {}
