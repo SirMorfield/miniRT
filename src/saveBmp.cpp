@@ -69,6 +69,7 @@ bool save_bmp(size_t xSize, size_t ySize, const std::vector<Rgb>& frame, const s
 	}
 
 	pFile.write((const char*)buf, bmp_size(xSize, ySize));
+	free(buf);
 	pFile.close();
 	return true;
 }
