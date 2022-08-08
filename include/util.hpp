@@ -53,3 +53,10 @@ class Time {
 	std::chrono::time_point<std::chrono::high_resolution_clock> _start;
 	//
 };
+
+namespace _rand {
+
+float _float(float a, float b);
+Vec3  vec3(float a, float b);
+
+} // namespace _rand
