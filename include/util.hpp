@@ -40,7 +40,7 @@ class Time {
   public:
 	typedef long long nanoseconds;
 
-	Time();
+	Time(const std::string& label = "");
 
 	Time::nanoseconds end() const;
 	std::string		  endString() const;
@@ -51,6 +51,7 @@ class Time {
 
   private:
 	std::chrono::time_point<std::chrono::high_resolution_clock> _start;
+	const std::string											_label;
 	//
 };
 

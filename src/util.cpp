@@ -22,9 +22,9 @@ std::string pad_start(const std::string& str, size_t length, char pad) {
 	return result;
 }
 
-Time::Time() {
-	_start = std::chrono::high_resolution_clock::now();
-}
+Time::Time(const std::string& label)
+	: _start(std::chrono::high_resolution_clock::now()),
+	  _label(label) {}
 
 Time::nanoseconds Time::end() const { // in nanoseconds
 	auto end = std::chrono::high_resolution_clock::now();
@@ -67,6 +67,8 @@ std::string Time::endFormatted(Time::nanoseconds duration) const {
 
 void Time::print() const {
 	volatile Time::nanoseconds duration = end();
+	if (_label.size())
+		std::cout << _label << ": ";
 	std::cout << endFormatted(duration) << std::endl;
 }
 
