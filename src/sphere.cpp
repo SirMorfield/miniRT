@@ -41,6 +41,7 @@ Hit Sphere::hit(const Ray& ray) const {
 	else
 		hit.normal = _origin - hit.point;
 	hit.normal.normalize();
+	hit.color = color;
 	return hit;
 }
 
