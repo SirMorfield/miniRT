@@ -1,21 +1,9 @@
-// this will be removed
 #include "vector.hpp"
 #include "util.hpp"
 #include <cmath>
 
 // TODO: look into
 // typedef float	vec3f __attribute__((vector_size(sizeof(float) * 4)));
-
-// The (always positive) squared distance between a and b
-float distance2(Vec3 a, Vec3 b) {
-	Vec3 ab = a - b;
-	return ab.x * ab.x + ab.y * ab.y + ab.z * ab.z;
-}
-
-// The (always positive) distance between a and b
-float distance(Vec3 a, Vec3 b) {
-	return std::sqrt(distance2(a, b));
-}
 
 Vec3 correct_normal(const Vec3& normal, const Ray& ray) {
 	const Vec3 inverse = normal * -1.0f;
@@ -26,7 +14,6 @@ Vec3 correct_normal(const Vec3& normal, const Ray& ray) {
 }
 
 Vec3::Vec3() {}
-Vec3::~Vec3() {}
 
 Vec3::Vec3(float x, float y, float z) : x(x), y(y), z(z) {}
 Vec3::Vec3(float xyz) : Vec3(xyz, xyz, xyz) {}
@@ -38,9 +25,7 @@ Vec3& Vec3::operator=(const Vec3& cp) {
 	return *this;
 }
 
-Vec3::Vec3(const Vec3& cp) {
-	*this = cp;
-}
+Vec3::Vec3(const Vec3& cp) { *this = cp; }
 
 Vec3 Vec3::operator+(const Vec3& cp) const { return Vec3(x + cp.x, y + cp.y, z + cp.z); }
 Vec3 Vec3::operator-(const Vec3& cp) const { return Vec3(x - cp.x, y - cp.y, z - cp.z); }
@@ -62,6 +47,7 @@ void Vec3::normalize() {
 	y *= invLen;
 	z *= invLen;
 }
+
 float Vec3::length2() const { return x * x + y * y + z * z; }
 float Vec3::length() const { return std::sqrt(length2()); }
 
@@ -71,10 +57,11 @@ float Vec3::distance2(const Vec3& v) const {
 }
 float Vec3::distance(const Vec3& v) const { return std::sqrt(distance2(v)); }
 
-void  Vec3::translate(const Vec3& dir, float t) {
-	 x += dir.x * t;
-	 y += dir.y * t;
-	 z += dir.z * t;
+//
+void Vec3::translate(const Vec3& dir, float t) {
+	x += dir.x * t;
+	y += dir.y * t;
+	z += dir.z * t;
 }
 
 std::ostream& operator<<(std::ostream& o, const Vec3& v) {
