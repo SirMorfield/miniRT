@@ -4,33 +4,6 @@
 #include "util.hpp"
 #include <cmath>
 
-Frame_buffer::Frame_buffer(size_t xSize, size_t ySize) {
-	_y_size = ySize;
-	_x_size = xSize;
-	_max_i = xSize * ySize;
-	_frame.resize(xSize * ySize);
-	_i = 0;
-}
-
-std::optional<Point2<size_t>> Frame_buffer::get_pixel() {
-	_mutex.lock();
-	std::optional<Point2<size_t>> pixel;
-	if (_i < _max_i) {
-		pixel = Point2<size_t>(_i % _x_size, _i / _x_size);
-		_i++;
-	}
-	_mutex.unlock();
-	return pixel;
-}
-
-void Frame_buffer::set_pixel(const Rgb& color, size_t x, size_t y) {
-	_frame[y * _x_size + x] = color;
-}
-
-void Frame_buffer::save_to_BMP() {
-	save_bmp(_x_size, _y_size, _frame, "scene.bmp");
-}
-
 Renderer::Renderer(size_t xSize, size_t ySize) {
 	_x_size = xSize;
 	_y_size = ySize;
