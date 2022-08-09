@@ -6,9 +6,9 @@ class Vec3 {
 	Vec3();
 	Vec3(float x, float y, float z);
 	Vec3(float xyz);
+	Vec3(const Vec3& cp);
 
 	Vec3& operator=(const Vec3& cp);
-	Vec3(const Vec3& cp);
 
 	Vec3  operator+(const Vec3& cp) const;
 	Vec3  operator-(const Vec3& cp) const;
@@ -19,6 +19,16 @@ class Vec3 {
 	Vec3  operator-(float f) const;
 	Vec3  operator*(float f) const;
 	Vec3  operator/(float f) const;
+
+	Vec3& operator+=(const Vec3& cp);
+	Vec3& operator-=(const Vec3& cp);
+	Vec3& operator*=(const Vec3& cp);
+	Vec3& operator/=(const Vec3& cp);
+
+	Vec3& operator+=(float f);
+	Vec3& operator-=(float f);
+	Vec3& operator*=(float f);
+	Vec3& operator/=(float f);
 
 	float length2() const;
 	float length() const;
