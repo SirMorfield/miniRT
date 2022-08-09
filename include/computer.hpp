@@ -50,12 +50,13 @@ class Frame_buffer {
 
 class Renderer {
   public:
-	Renderer(size_t xSize, size_t ySize);
+	Renderer(size_t xSize, size_t ySize, size_t AA_level);
 	void thread(const Scene& scene, Frame_buffer* fb);
 
   private:
 	Ray	   ray_from_pixel(const Camera& camera, float x, float y) const;
 	size_t _x_size;
 	size_t _y_size;
+	size_t _AA_level;
 	float  _aspect_ratio;
 };

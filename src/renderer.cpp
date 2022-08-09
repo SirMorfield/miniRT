@@ -4,9 +4,11 @@
 #include "util.hpp"
 #include <cmath>
 
-Renderer::Renderer(size_t xSize, size_t ySize) {
+Renderer::Renderer(size_t xSize, size_t ySize, size_t AA_level) {
 	_x_size = xSize;
 	_y_size = ySize;
+	assert(AA_level == 1 || is_power_of_2(AA_level));
+	_AA_level = AA_level;
 	_aspect_ratio = (float)_x_size / _y_size;
 }
 
@@ -26,14 +28,34 @@ Ray Renderer::ray_from_pixel(const Camera& camera, float x, float y) const {
 	return ray;
 }
 
+Rgb average_color(const std::vector<Rgb>& colors) {
+	Vec3 color(0);
+
+	for (const Rgb& c : colors)
+		color += Vec3(c.r, c.g, c.b);
+
+	color /= colors.size();
+	return Rgb(std::round(color.x),
+			   std::round(color.y),
+			   std::round(color.z));
+}
+
 void Renderer::thread(const Scene& scene, Frame_buffer* fb) {
+	std::vector<Rgb> colors(_AA_level * _AA_level);
+	const float		 aa = 1.0f / std::sqrt(_AA_level);
+
 	while (true) {
 		std::optional<Point2<size_t>> pixel = fb->get_pixel();
 		if (!pixel.has_value())
 			break;
 
-		Ray ray = ray_from_pixel(scene._camera, pixel->x, pixel->y);
-		Rgb color = scene.get_color(ray);
-		fb->set_pixel(color, pixel->x, pixel->y);
+		for (float y_off = EPSILON; y_off < 1.0f; y_off += aa) {
+			for (float x_off = EPSILON; x_off < 1.0f; x_off += aa) {
+				Ray ray = ray_from_pixel(scene._camera, pixel->x + x_off, pixel->y + y_off);
+				colors.push_back(scene.get_color(ray));
+			}
+		}
+		fb->set_pixel(average_color(colors), pixel->x, pixel->y);
+		colors.clear();
 	}
 }

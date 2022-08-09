@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 	scene_parse_time.print();
 
 	Frame_buffer			 fb(scene.resolution.width(), scene.resolution.height());
-	Renderer				 renderer(scene.resolution.width(), scene.resolution.height());
+	Renderer				 renderer(scene.resolution.width(), scene.resolution.height(), env::anti_aliasing_level);
 	std::vector<std::thread> threads(env::threads);
 
 	std::cout << scene << std::endl;

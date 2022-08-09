@@ -4,6 +4,7 @@
 #include <functional>
 #include <optional>
 #include <sstream>
+#include <type_traits>
 
 template <class T>
 T radians(T degrees) {
@@ -54,6 +55,11 @@ class Time {
 	const std::string											_label;
 	//
 };
+
+template <typename T>
+bool is_power_of_2(T x, std::enable_if<std::is_integral<T>::value>* = nullptr) {
+	return (x != 0) && ((x & (x - 1)) == 0);
+}
 
 namespace _rand {
 
