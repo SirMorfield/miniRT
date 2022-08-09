@@ -17,7 +17,10 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 
-	Scene					 scene(path);
+	Time  scene_parse_time("Parsed scene in");
+	Scene scene(path);
+	scene_parse_time.print();
+
 	Frame_buffer			 fb(scene.resolution.width(), scene.resolution.height());
 	Renderer				 renderer(scene.resolution.width(), scene.resolution.height());
 	std::vector<std::thread> threads(env::threads);
@@ -28,11 +31,10 @@ int main(int argc, char* argv[]) {
 	for (size_t i = 0; i < threads.capacity(); i++)
 		threads[i] = std::thread(&Renderer::thread, &renderer, scene, &fb);
 
-	Time time;
+	Time render_time("Render time");
 	for (auto& th : threads)
 		th.join();
-	std::cout << "Render time: " << std::ends;
-	time.print();
+	render_time.print();
 
 	fb.save_to_BMP();
 	return 0;
