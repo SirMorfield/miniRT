@@ -25,12 +25,14 @@ SILECE_MAKE 	= | grep -v -E ".*Leaving directory|.*Entering directory"
 VPATH 			= $(shell find $(SRCDIR) -type d | tr '\n' ':' | sed -E 's/(.*):/\1/')
 .SUFFIXES:
 
-all: $(NAME)
 ifeq ($(uname -s),Linux)
-	@$(MAKE) -j $(shell nproc --all) $(NAME)
+	NCPU = $(shell nproc --all) $(NAME)
 else
-	@$(MAKE) -j $(shell sysctl -n hw.ncpu) $(NAME)
+	NCPU = $(shell sysctl -n hw.ncpu) $(NAME)
 endif
+MAKEFLAGS+="j $(NCPU)"
+
+all: $(NAME)
 
 $(NAME): $(BUILDDIR)/ $(OBJ) $(HEADERS)
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ_IN_DIR) $(LIBS) -o $(NAME) $(LINK)
