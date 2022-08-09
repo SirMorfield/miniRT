@@ -36,7 +36,8 @@ MAKEFLAGS+="j $(NCPU)"
 all: $(NAME)
 
 $(NAME): $(BUILDDIR)/ $(OBJ) $(HEADERS)
-	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ_IN_DIR) $(LIBS) -o $(NAME) $(LINK)
+	@$(CC) $(CFLAGS) $(INCLUDES) $(OBJ) $(LIBS) -o $(NAME) $(LINK)
+	@echo "(NAME) compiled"
 
 $(BUILDDIR)/%.$(OBJEXT): %.$(SRCEXT) $(HEADERS)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(BUILDDIR)/$(notdir $@)
