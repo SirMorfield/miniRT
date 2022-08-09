@@ -18,7 +18,7 @@ class Octree {
 	void subdivide() {
 		if (this->_children.empty()) {
 			std::vector<AABB> sub_aabbs = this->_aabb.subdivide();
-			// this->_children.reserve(sub_aabbs.size());
+			this->_children.reserve(sub_aabbs.size());
 			for (const AABB& aabb : sub_aabbs) {
 				this->_children.push_back(Octree<T>(aabb));
 			}
