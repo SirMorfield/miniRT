@@ -33,6 +33,7 @@ class Triangle : public Shape {
 	Triangle(Rgb color, Vec3 p0, Vec3 p1, Vec3 p2);
 	Intersect intersect(const Ray& ray) const;
 	bool	  is_inside_AABB(const AABB& aabb) const;
+	AABB	  get_AABB() const; // TODO: make template
 
 	virtual ~Triangle() {}
 
@@ -53,8 +54,6 @@ class AABB {
 
 	// subdivide space into  8 children
 	std::vector<AABB> subdivide() const;
-
-	// bool			  is_inside_AABB(const AABB& aabb) const; // TODO: instead of shape.is_inside_AABB(aabb)
 
 	//   private:
 	Vec3 _min;
