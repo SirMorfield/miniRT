@@ -75,7 +75,7 @@ void Time::print() const {
 namespace _rand {
 
 float _float(float a, float b) {
-	return ((b - a) * ((float)rand() / RAND_MAX)) + a;
+	return ((b - a) * ((float)rand() / (float)RAND_MAX)) + a;
 }
 
 Vec3 vec3(float a, float b) {
