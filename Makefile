@@ -2,8 +2,9 @@
 NAME      		= miniRT
 
 CC          	= clang++
-CFLAGS      	= -Wall -Wextra  -pedantic -std=c++17 -Wshadow -O3
-# CFLAGS      	= -Wall -Wextra -Werror -Wuninitialized -O3
+CFLAGS      	= -Wall -Wextra  -pedantic -std=c++17 -Wshadow
+CFLAGS      	+= -O3
+# CFLAGS			+= -O0 -g3 -fsanitize=address
 
 SRCEXT      	= cpp
 SRCDIR      	= src
