@@ -32,9 +32,9 @@ std::ostream& operator<<(std::ostream& o, const Scene& scene);
 class Frame_buffer {
   public:
 	Frame_buffer(size_t xSize, size_t ySize);
-	bool get_pixel(size_t& x, size_t& y);
-	void set_pixel(const Rgb& color, size_t x, size_t y);
-	void save_to_BMP();
+	std::optional<Point2<size_t>> get_pixel();
+	void						  set_pixel(const Rgb& color, size_t x, size_t y);
+	void						  save_to_BMP();
 
   private:
 	size_t			 _max_i;

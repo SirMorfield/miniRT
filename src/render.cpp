@@ -8,23 +8,19 @@ Frame_buffer::Frame_buffer(size_t xSize, size_t ySize) {
 	_y_size = ySize;
 	_x_size = xSize;
 	_max_i = xSize * ySize;
-	_frame.reserve(xSize * ySize);
+	_frame.resize(xSize * ySize);
 	_i = 0;
 }
 
-bool Frame_buffer::get_pixel(size_t& x, size_t& y) {
-	bool success;
+std::optional<Point2<size_t>> Frame_buffer::get_pixel() {
 	_mutex.lock();
+	std::optional<Point2<size_t>> pixel;
 	if (_i < _max_i) {
-		x = _i % _x_size;
-		y = _i / _x_size;
+		pixel = Point2<size_t>(_i % _x_size, _i / _x_size);
 		_i++;
-		success = true;
 	}
-	else
-		success = false;
 	_mutex.unlock();
-	return success;
+	return pixel;
 }
 
 void Frame_buffer::set_pixel(const Rgb& color, size_t x, size_t y) {
@@ -59,11 +55,13 @@ Ray Renderer::ray_from_pixel(const Camera& camera, float x, float y) const {
 }
 
 void Renderer::thread(const Scene& scene, Frame_buffer* fb) {
-	size_t x;
-	size_t y;
-	while (fb->get_pixel(x, y)) {
-		Ray ray = ray_from_pixel(scene._camera, x, y);
+	while (true) {
+		std::optional<Point2<size_t>> pixel = fb->get_pixel();
+		if (!pixel.has_value())
+			break;
+
+		Ray ray = ray_from_pixel(scene._camera, pixel->x, pixel->y);
 		Rgb color = scene.get_color(ray);
-		fb->set_pixel(color, x, y);
+		fb->set_pixel(color, pixel->x, pixel->y);
 	}
 }

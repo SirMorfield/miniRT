@@ -2,6 +2,7 @@
 #include "vector.hpp"
 #include <functional>
 #include <iostream>
+#include <optional>
 #include <string>
 #include <vector>
 #define EPSILON 1e-8
@@ -85,4 +86,13 @@ class Resolution {
   private:
 	size_t _width;
 	size_t _height;
+};
+
+template <typename T>
+class Point2 {
+  public:
+	Point2(){};
+	Point2(T x, T y) : x(x), y(y) {}
+	T x;
+	T y;
 };
