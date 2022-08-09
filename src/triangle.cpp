@@ -13,32 +13,33 @@ Triangle::Triangle(Rgb color, Vec3 p0, Vec3 p1, Vec3 p2) {
 	this->normal.normalize();
 }
 
-Intersect Triangle::intersect(const Ray& ray) const {
+Hit Triangle::hit(const Ray& ray) const {
 	Vec3   h, s, q;
 	double a, f, u, v;
 
 	h = ray.dir.cross(edge2);
 	a = edge1.dot(h);
 	if (a > -EPSILON && a < EPSILON)
-		return Intersect(false); // Ray is parallel to this triangle.
+		return Hit(false); // Ray is parallel to this triangle.
 	f = 1.0 / a;
 	s = ray.origin - p0;
 	u = f * s.dot(h);
 	if (u < 0.0 || u > 1.0)
-		return Intersect(false);
+		return Hit(false);
 	q = s.cross(edge1);
 	v = f * ray.dir.dot(q);
 	if (v < 0.0 || u + v > 1.0)
-		return Intersect(false);
+		return Hit(false);
 	double t = f * edge2.dot(q);
 	if (t < EPSILON) // There is a line intersection but not a ray intersection
-		return Intersect(false);
+		return Hit(false);
 
-	Intersect intersect(true);
-	intersect.dist = (ray.dir * t).length();
-	intersect.point = ray.origin * intersect.dist;
-	intersect.normal = correct_normal(normal, ray);
-	return (intersect);
+	Hit hit(true);
+	hit.dist = (ray.dir * t).length();
+	hit.point = ray.origin * hit.dist;
+	hit.normal = correct_normal(normal, ray);
+	hit.color = color;
+	return (hit);
 }
 
 bool Triangle::is_inside_AABB(const AABB& aabb) const {

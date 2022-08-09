@@ -64,37 +64,27 @@ std::ostream& operator<<(std::ostream& o, const Scene& scene) {
 	return o;
 }
 
-Hit Scene::hit(const Ray& ray, const std::set<ID>& ignore) const {
-	Hit hits[] = {
-		hit_shape(_spheres, ray, ignore),
-		_triangles.hit(ray),
-	};
-	Hit hit(false);
-	for (size_t i = 0; i < sizeof(hits) / sizeof(Hit); i++) {
-		if (hits[i].hit && (!hit.hit || hits[i].dist < hit.dist))
-			hit = hits[i];
-	}
-	return hit;
+Hit Scene::hit(const Ray& ray) const {
+	return _triangles.hit(ray);
 }
 
-bool Scene::is_clear_path(const std::set<ID>& ignore, const Vec3& point, const Light& light) const {
+bool Scene::is_clear_path(const Vec3& point, const Light& light) const {
 	Vec3 v = light._origin - point;
 	v.normalize();
 	Ray toLight(point, v);
 
-	Hit hit = Scene::hit(toLight, ignore);
+	Hit hit = Scene::hit(toLight);
 	return !hit.hit || hit.dist * hit.dist > light._origin.distance2(point);
 }
 
 Rgb Scene::get_color(const Ray& ray) const {
-	std::set<ID> ignore;
-	Hit			 hit = this->hit(ray, ignore);
+	Hit hit = this->hit(ray);
 	if (!hit.hit)
 		return _backgroundColor;
-	ignore.insert(hit.id);
+
 	Rgb lightAccumulator = Rgb(0, 0, 0);
 	for (auto& light : _lights) {
-		if (!is_clear_path(ignore, hit.point, light))
+		if (!is_clear_path(hit.point, light))
 			continue;
 		float relativeIntensity = light.relative_intensity(hit.point, hit.normal);
 		lightAccumulator.add(light._color, relativeIntensity);

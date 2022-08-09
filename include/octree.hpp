@@ -69,9 +69,9 @@ class Octree {
 		}
 
 		for (auto& shape : this->_shapes) {
-			Intersect intersect = shape.intersect(ray);
-			if (intersect.hit && (!closest_hit.hit || intersect.dist < closest_hit.dist))
-				closest_hit = Hit(intersect.dist, intersect.point, intersect.normal, shape.color, shape.id);
+			Hit hit = shape.hit(ray);
+			if (hit.hit && (!closest_hit.hit || hit.dist < closest_hit.dist))
+				closest_hit = hit;
 		}
 		return closest_hit;
 	}

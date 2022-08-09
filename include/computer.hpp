@@ -1,5 +1,4 @@
 #pragma once
-#include "hit_shape.hpp"
 #include "lighting.hpp"
 #include "octree.hpp"
 #include "shapes.hpp"
@@ -13,13 +12,13 @@ class Scene {
   public:
 	Scene();
 	Scene(const std::string& path);
-	Hit		   hit(const Ray& ray, const std::set<ID>& ignore) const;
+	Hit		   hit(const Ray& ray) const;
 	Rgb		   get_color(const Ray& ray) const;
 	Camera	   _camera;
 	Resolution resolution;
 
   private:
-	bool				 is_clear_path(const std::set<ID>& ignore, const Vec3& point, const Light& light) const;
+	bool				 is_clear_path(const Vec3& point, const Light& light) const;
 	std::vector<Sphere>	 _spheres;
 	Octree<Triangle>	 _triangles;
 	std::vector<Light>	 _lights;

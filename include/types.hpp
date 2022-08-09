@@ -32,22 +32,24 @@ typedef struct { // TODO better name
 
 typedef uint64_t ID;
 
-class Intersect {
+// TODO: maybe as optional?
+class Hit {
   public:
-	Intersect(bool hit);
-	Intersect(float dist, Vec3 point, Vec3 normal);
+	Hit(bool hit);
+	Hit(float dist, const Vec3& point, const Vec3& normal, const Rgb& color);
+
+	// bool		hit() const { return _hit; }
+	// float		dist() const { return _dist; }
+	// const Vec3& point() const { return _point; }
+	// const Vec3& normal() const { return _normal; }
+	// const Rgb&	color() const { return _color; }
+
+	//   private:
 	bool  hit;
 	float dist;
 	Vec3  point;
 	Vec3  normal;
-};
-
-class Hit : public Intersect {
-  public:
-	Hit(bool hit);
-	Hit(float dist, Vec3 point, Vec3 normal, Rgb color, ID id);
-	Rgb color;
-	ID	id;
+	Rgb	  color;
 };
 
 class Light {

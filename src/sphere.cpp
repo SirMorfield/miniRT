@@ -9,7 +9,7 @@ Sphere::Sphere(const Vec3& origin, const Rgb& color, float radius) {
 	this->_radius = radius;
 }
 
-Quadradic Sphere::get_intersections(const Ray& ray) const {
+Quadradic Sphere::get_hitions(const Ray& ray) const {
 	Vec3  l = ray.origin - _origin;
 	float a = ray.dir.dot(ray.dir);
 	float b = 2 * ray.dir.dot(l);
@@ -26,14 +26,14 @@ static float actual_t(float t0, float t1) {
 	return (-1);
 }
 
-Intersect Sphere::intersect(const Ray& ray) const {
-	Quadradic q = get_intersections(ray);
+Hit Sphere::hit(const Ray& ray) const {
+	Quadradic q = get_hitions(ray);
 	if (!q.solved)
-		return Intersect(false);
-	Intersect hit(true);
+		return Hit(false);
+	Hit hit(true);
 	hit.dist = actual_t(q.x0, q.x1);
 	if (hit.dist < 0)
-		return Intersect(false);
+		return Hit(false);
 	hit.point = ray.origin;
 	hit.point.translate(ray.dir, hit.dist);
 	if (ray.origin.distance2(_origin) > _radius * _radius)
