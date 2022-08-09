@@ -37,7 +37,7 @@ all: $(NAME)
 
 $(NAME): $(BUILDDIR)/ $(OBJ) $(HEADERS)
 	@$(CC) $(CFLAGS) $(INCLUDES) $(OBJ) $(LIBS) -o $(NAME) $(LINK)
-	@echo "(NAME) compiled"
+	@echo "$(NAME) compiled"
 
 $(BUILDDIR)/%.$(OBJEXT): %.$(SRCEXT) $(HEADERS)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(BUILDDIR)/$(notdir $@)
