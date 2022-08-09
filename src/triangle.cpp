@@ -46,3 +46,16 @@ bool Triangle::is_inside_AABB(const AABB& aabb) const {
 		   aabb.is_inside(p1) &&
 		   aabb.is_inside(p2);
 }
+
+AABB Triangle::get_AABB() const {
+	Vec3 min(
+		std::min({p0.x, p1.x, p2.x}),
+		std::min({p0.y, p1.y, p2.y}),
+		std::min({p0.z, p1.z, p2.z}));
+	Vec3 max(
+		std::max({p0.x, p1.x, p2.x}),
+		std::max({p0.y, p1.y, p2.y}),
+		std::max({p0.z, p1.z, p2.z}));
+
+	return AABB(min, max);
+}

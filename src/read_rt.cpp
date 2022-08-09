@@ -109,7 +109,7 @@ void to_triangle(const std::vector<std::string>& blocks, Octree<Triangle>& trian
 	Rgb color;
 	if (!toRgb(color, blocks.at(4)))
 		return;
-	assert(triangles.insert(Triangle(color, p0, p1, p2)));
+	triangles.push_back(Triangle(color, p0, p1, p2));
 }
 
 void to_resolution(const std::vector<std::string>& blocks, Resolution& resolution) {

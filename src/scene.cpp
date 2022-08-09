@@ -27,7 +27,10 @@ bool is_comment(const std::string& line) {
 }
 
 Scene::Scene(const std::string& path) : resolution(env::width, env::height) {
-	_triangles = Octree<Triangle>(AABB(Vec3(-1000, -1000, -1000), Vec3(1000, 1000, 1000))); // TODO: make this dynamic
+	const AABB aabb(
+		Vec3(-std::numeric_limits<float>::infinity()),
+		Vec3(std::numeric_limits<float>::infinity()));
+	_triangles = Octree<Triangle>(aabb);
 
 	_backgroundColor = Rgb(0, 0, 0);
 
@@ -47,6 +50,8 @@ Scene::Scene(const std::string& path) : resolution(env::width, env::height) {
 			to_resolution(blocks, resolution);
 	}
 	file.close();
+	_triangles.shirk_to_fit();
+	_triangles.subdivide();
 }
 
 std::ostream& operator<<(std::ostream& o, const Scene& scene) {

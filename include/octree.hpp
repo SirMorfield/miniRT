@@ -2,7 +2,7 @@
 #include "shapes.hpp"
 #include <limits>
 #define N_SUBNODES 8
-#define MAX_ELEMENTS_PER_NODE 1
+#define MAX_ELEMENTS_PER_NODE 10
 
 // TODO: template for data storage
 
@@ -11,9 +11,9 @@ class Octree {
   public:
 	Octree() : Octree(AABB(Vec3(0, 0, 0), Vec3(0, 0, 0))) {}
 
-	Octree(const AABB& aabb) : _aabb(aabb) {
-		_size = 0;
-	}
+	Octree(const AABB& aabb)
+		: _size(0),
+		  _aabb(aabb) {}
 
 	void subdivide() {
 		if (this->_children.empty()) {
@@ -35,7 +35,7 @@ class Octree {
 			this->_shapes.end());
 	}
 
-	bool insert(const T& shape) {
+	[[nodiscard]] bool insert(const T& shape) {
 		if (!shape.is_inside_AABB(this->_aabb))
 			return false;
 		_size++;
@@ -54,8 +54,8 @@ class Octree {
 		this->_shapes.push_back(shape);
 		return true;
 	}
-	// void push_back(const T& shape) { this->insert(shape); }
 
+	// TODO: first check children, if hit: ignore subdivisions behind the object
 	Hit hit(const Ray& ray) const {
 		if (!this->_aabb.intersect(ray))
 			return Hit(false);
@@ -77,27 +77,31 @@ class Octree {
 	}
 
 	void shirk_to_fit() {
-		if (!this->is_leaf())
-			return; // TODO: go all the way down the tree instead of stopping here
 		if (this->_shapes.size() == 0)
 			return;
 
-		Vec3 min = this->_shapes[0]._min;
-		Vec3 max = this->_shapes[0]._max;
+		Vec3 min = this->_aabb._min;
+		Vec3 max = this->_aabb._max;
 
-		for (T& shape : this->_shapes) {
-			Vec3& shape_AABB = shape.get_AABB();
+		for (const T& shape : this->_shapes) {
+			const AABB& shape_AABB = shape.get_AABB();
 
-			min.x = std::min(min.x, shape_AABB.x);
-			min.y = std::min(min.y, shape_AABB.y);
-			min.z = std::min(min.z, shape_AABB.z);
+			min.x = std::max(min.x, shape_AABB._min.x);
+			min.y = std::max(min.y, shape_AABB._min.y);
+			min.z = std::max(min.z, shape_AABB._min.z);
 
-			max.x = std::max(max.x, shape_AABB.x);
-			max.y = std::max(max.y, shape_AABB.y);
-			max.z = std::max(max.z, shape_AABB.z);
+			max.x = std::min(max.x, shape_AABB._max.x);
+			max.y = std::min(max.y, shape_AABB._max.y);
+			max.z = std::min(max.z, shape_AABB._max.z);
 		}
+
+		this->_aabb = AABB(max, min);
 	}
 
+	void push_back(const T& shape) {
+		this->_shapes.push_back(shape);
+		this->_size++;
+	}
 	size_t size() const { return this->_size; }
 	// Octree(const& Octree<T> other) = delete;
 	// Octree& operator=(const& Octree<T> other) = delete;
@@ -105,7 +109,6 @@ class Octree {
   private:
 	size_t				_size;
 	AABB				_aabb;
-	size_t				_max_elements_per_node;
 	std::vector<T>		_shapes;
 	std::vector<Octree> _children;
 };
