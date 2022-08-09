@@ -73,6 +73,7 @@ class Camera {
 	Vec3  _pos;
 	Vec3  _dir;
 	float _fov;
+	float _fov_tan;
 };
 
 class Resolution {

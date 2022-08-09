@@ -38,9 +38,8 @@ Renderer::Renderer(size_t xSize, size_t ySize) {
 }
 
 Ray Renderer::ray_from_pixel(const Camera& camera, float x, float y) const {
-	float fov = tan(camera._fov * 0.5);
-	float px = (2 * x / _x_size - 1) * _aspect_ratio * fov;
-	float py = (2 * y / (float)_y_size - 1) * fov;
+	float px = (2 * x / _x_size - 1) * _aspect_ratio * camera._fov_tan;
+	float py = (2 * y / (float)_y_size - 1) * camera._fov_tan;
 	Ray	  ray;
 	ray.origin = camera._pos;
 	Vec3 positiveX;
