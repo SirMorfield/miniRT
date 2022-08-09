@@ -6,6 +6,7 @@
 Rgb::Rgb(uint8_t r, uint8_t g, uint8_t b) : r(r), g(g), b(b) {}
 
 void Rgb::add(const Rgb& color, float intensity) {
+	// TODO: tone mapping
 	r = std::round(std::min(r + color.r * intensity, 255.0f));
 	g = std::round(std::min(g + color.g * intensity, 255.0f));
 	b = std::round(std::min(b + color.b * intensity, 255.0f));
