@@ -58,4 +58,8 @@ class AABB {
 	//   private:
 	Vec3 _min;
 	Vec3 _max;
+
+	//
+	friend std::ostream& operator<<(std::ostream& o, const AABB& aabb);
 };
+std::ostream& operator<<(std::ostream& o, const AABB& aabb);

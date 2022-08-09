@@ -63,4 +63,9 @@ std::vector<AABB> AABB::subdivide() const {
 		AABB(center, _max)};
 }
 
+std::ostream& operator<<(std::ostream& o, const AABB& aabb) {
+	o << aabb._min << " | " << aabb._max;
+	return o;
+}
+
 // AABB::~AABB() {}
