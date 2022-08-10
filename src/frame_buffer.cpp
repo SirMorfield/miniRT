@@ -1,5 +1,6 @@
 // This is very very bad
 #include "computer.hpp"
+#include "env.hpp"
 #include "io.hpp"
 #include "types.hpp"
 #include "util.hpp"
@@ -25,6 +26,12 @@ std::optional<Point2<size_t>> Frame_buffer::get_pixel() {
 		pixel = Point2<size_t>(_i % _x_size, _i / _x_size);
 		_i++;
 	}
+	if (pixel.has_value()) {
+		if (_i == 0)
+			_progress.start();
+		if (env::log_progress)
+			this->_progress.print(((_i + 1) / (float)_max_i) * 100);
+	}
 	_mutex.unlock();
 	return pixel;
 }
@@ -33,7 +40,7 @@ void Frame_buffer::set_pixel(const Rgb& color, size_t x, size_t y) {
 	_frame[y * _x_size + x] = color;
 }
 
-void Frame_buffer::save_to_BMP() {
+void Frame_buffer::save_to_BMP() const {
 	save_bmp(_x_size, _y_size, _frame, "scene.bmp");
 }
 

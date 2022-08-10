@@ -1,6 +1,7 @@
 #include "util.hpp"
 #include "vector.hpp"
 #include <cmath>
+#include <iomanip>
 
 std::vector<std::string> split(const std::string& s, char delim) {
 	std::istringstream		 iss(s);
@@ -23,23 +24,66 @@ std::string pad_start(const std::string& str, size_t length, char pad) {
 }
 
 Time::Time(const std::string& label)
-	: _start(std::chrono::high_resolution_clock::now()),
-	  _label(label) {}
+	: _label(label) {
+	this->start();
+}
 
-Time::nanoseconds Time::end() const { // in nanoseconds
+void Time::start() {
+	_start = std::chrono::high_resolution_clock::now();
+}
+
+Time::nanoseconds Time::duration() const { // in nanoseconds
 	auto end = std::chrono::high_resolution_clock::now();
 	return std::chrono::duration_cast<std::chrono::nanoseconds>(end - _start).count();
 }
 
-std::string Time::endString() const {
-	return std::to_string(end()) + " ns";
+std::string Time::duration_str() const {
+	return std::to_string(duration()) + " ns";
 }
 
-std::string Time::endFormatted() const {
-	return endFormatted(end());
+std::string Time::duration_formatted() const {
+	return duration_formatted(duration());
 }
 
-std::string Time::endFormatted(Time::nanoseconds duration) const {
+Progress_logger::Progress_logger(
+	const std::string& label,
+	float			   precision,
+	size_t			   print_precision)
+	: Time(label),
+	  _precision(precision),
+	  _print_precision(print_precision),
+	  _last_percentage(-1.0f) {
+	this->start();
+}
+
+void Progress_logger::print(float percentage) {
+	if (this->_last_percentage >= 100.0f)
+		return;
+	if (percentage >= 100.0f) {
+		this->_print(100.0f, 0);
+		this->_last_percentage = 100.0f;
+		std::cout << std::endl;
+	}
+
+	if (percentage - this->_last_percentage < this->_precision)
+		return;
+	_last_percentage = percentage;
+	const Time::nanoseconds remaining_time = (100.0f - percentage) * (this->duration() / percentage);
+	this->_print(percentage, remaining_time);
+}
+
+void Progress_logger::_print(float percentage, Time::nanoseconds remaining_time) {
+	std::cout << "\r" << _label << ": ";
+	std::cout << std::fixed;
+	std::cout << std::setprecision(_print_precision);
+	std::cout << std::setw(4 + this->_precision);
+	std::cout << percentage << "%, ";
+	std::cout << this->duration_formatted(remaining_time) << " remaining";
+	std::cout << std::ends;
+	std::flush(std::cout);
+}
+
+std::string Time::duration_formatted(Time::nanoseconds duration) const {
 	long long hours = duration / 3600000000000;
 	duration %= 3600000000000;
 	long long minutes = duration / 60000000000;
@@ -66,10 +110,10 @@ std::string Time::endFormatted(Time::nanoseconds duration) const {
 }
 
 void Time::print() const {
-	volatile Time::nanoseconds duration = end();
+	volatile Time::nanoseconds duration = this->duration();
 	if (_label.size())
 		std::cout << _label << ": ";
-	std::cout << endFormatted(duration) << std::endl;
+	std::cout << this->duration_formatted(duration) << std::endl;
 }
 
 namespace _rand {

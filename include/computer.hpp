@@ -34,7 +34,7 @@ class Frame_buffer {
 	Frame_buffer(size_t xSize, size_t ySize);
 	std::optional<Point2<size_t>> get_pixel();
 	void						  set_pixel(const Rgb& color, size_t x, size_t y);
-	void						  save_to_BMP();
+	void						  save_to_BMP() const;
 
   private:
 	size_t			 _max_i;
@@ -43,6 +43,7 @@ class Frame_buffer {
 	size_t			 _i;
 	std::mutex		 _mutex;
 	std::vector<Rgb> _frame;
+	Progress_logger	 _progress;
 
 	// disabled
 	Frame_buffer();
