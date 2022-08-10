@@ -76,7 +76,7 @@ void Progress_logger::_print(float percentage, Time::nanoseconds remaining_time)
 	std::cout << "\r" << _label << ": ";
 	std::cout << std::fixed;
 	std::cout << std::setprecision(_print_precision);
-	std::cout << std::setw(4 + this->_precision);
+	std::cout << std::setw(4 + this->_print_precision);
 	std::cout << percentage << "%, ";
 	std::cout << this->duration_formatted(remaining_time) << " remaining";
 	std::cout << std::ends;
