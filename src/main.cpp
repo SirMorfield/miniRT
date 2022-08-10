@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
 	Scene scene(path);
 	scene_parse_time.print();
 
-	Frame_buffer			 fb(scene.resolution.width(), scene.resolution.height());
+	Frame_buffer			 fb(scene.resolution.width(), scene.resolution.height(), env::log_progress);
 	Renderer				 renderer(scene.resolution.width(), scene.resolution.height(), env::anti_aliasing_level);
 	std::vector<std::thread> threads(env::threads);
 

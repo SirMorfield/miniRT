@@ -1,6 +1,5 @@
 // This is very very bad
 #include "computer.hpp"
-#include "env.hpp"
 #include "io.hpp"
 #include "types.hpp"
 #include "util.hpp"
@@ -11,14 +10,17 @@
 
 #define HEADER_SIZE 54
 
-Frame_buffer::Frame_buffer(size_t xSize, size_t ySize) {
-	_y_size = ySize;
-	_x_size = xSize;
-	_max_i = xSize * ySize;
-	_frame.resize(xSize * ySize);
-	_i = 0;
+Frame_buffer::Frame_buffer(size_t x_size, size_t y_size, bool log_progress)
+	: _x_size(x_size),
+	  _y_size(y_size),
+	  _log_progress(log_progress),
+	  _i(0),
+	  _max_i(x_size * y_size) {
+
+	_frame.resize(x_size * y_size);
 }
 
+// TODO: get random pixel instead of sequencial
 std::optional<Point2<size_t>> Frame_buffer::get_pixel() {
 	_mutex.lock();
 	std::optional<Point2<size_t>> pixel;
@@ -26,11 +28,10 @@ std::optional<Point2<size_t>> Frame_buffer::get_pixel() {
 		pixel = Point2<size_t>(_i % _x_size, _i / _x_size);
 		_i++;
 	}
-	if (pixel.has_value()) {
-		if (_i == 0)
+	if (this->_log_progress && pixel.has_value()) {
+		if (_i == 1)
 			_progress.start();
-		if (env::log_progress)
-			this->_progress.print(((_i + 1) / (float)_max_i) * 100);
+		this->_progress.print((_i / (float)_max_i) * 100);
 	}
 	_mutex.unlock();
 	return pixel;
