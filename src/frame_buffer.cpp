@@ -10,28 +10,48 @@
 
 #define HEADER_SIZE 54
 
+static size_t get_change(size_t x_size, size_t y_size) {
+	if (x_size <= 1 || y_size <= 1)
+		return 1;
+	return 7;
+	size_t pix = (x_size * y_size) / 10;
+	size_t change = pix < 3 ? 3 : closest_prime(pix);
+	assert(change % 2);
+	return change;
+}
+
 Frame_buffer::Frame_buffer(size_t x_size, size_t y_size, bool log_progress)
 	: _x_size(x_size),
 	  _y_size(y_size),
 	  _log_progress(log_progress),
 	  _i(0),
-	  _max_i(x_size * y_size) {
+	  _offset(0),
+	  _change(get_change(x_size, y_size)),
+	  _pix_done(0) {
+
+	//   _change(closest_prime((_x_size * _y_size) / 1000) + 5) {
 
 	_frame.resize(x_size * y_size);
+	for (size_t i = 0; i < _frame.size(); i++)
+		_frame.at(i) = Rgb(255, 0, 0);
 }
 
 // TODO: get random pixel instead of sequencial
 std::optional<Point2<size_t>> Frame_buffer::get_pixel() {
 	_mutex.lock();
 	std::optional<Point2<size_t>> pixel;
-	if (_i < _max_i) {
-		pixel = Point2<size_t>(_i % _x_size, _i / _x_size);
-		_i++;
+	if (_pix_done < _frame.size()) {
+		_i += _change;
+		if (_i > _frame.size())
+			_i = ++_offset;
+		_pix_done++;
+		pixel = Point2<size_t>((_i - 1) % _x_size, (_i - 1) / _x_size);
+		std::cout << pad_start(std::to_string(_i), 5, '0') << std::endl;
 	}
-	if (this->_log_progress && pixel.has_value()) {
+	if (_log_progress && pixel.has_value()) {
 		if (_i == 1)
 			_progress.start();
-		this->_progress.print((_i / (float)_max_i) * 100);
+		_progress.print((_pix_done / (float)_frame.size()) * 100);
 	}
 	_mutex.unlock();
 	return pixel;
@@ -42,6 +62,7 @@ void Frame_buffer::set_pixel(const Rgb& color, size_t x, size_t y) {
 }
 
 void Frame_buffer::save_to_BMP() const {
+	assert(_pix_done == _frame.size());
 	save_bmp(_x_size, _y_size, _frame, "scene.bmp");
 }
 

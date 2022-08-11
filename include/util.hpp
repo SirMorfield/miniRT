@@ -1,6 +1,7 @@
 #pragma once
 #include "types.hpp"
 #include <chrono>
+#include <cmath>
 #include <functional>
 #include <optional>
 #include <sstream>
@@ -74,6 +75,30 @@ class Progress_logger : public Time {
 template <typename T>
 bool is_power_of_2(T x, std::enable_if<std::is_integral<T>::value>* = nullptr) {
 	return (x != 0) && ((x & (x - 1)) == 0);
+}
+
+// Returns the closest prime number where: result <= n
+template <typename T>
+T closest_prime(T n, std::enable_if<std::is_integral<T>::value>* = nullptr) {
+	// All prime numbers are odd except two
+	if (n & 1)
+		n -= 2;
+	else
+		n--;
+
+	T i, j;
+	for (i = n; i >= 2; i -= 2) {
+		if (i % 2 == 0)
+			continue;
+		for (j = 3; j <= std::sqrt(i); j += 2) {
+			if (i % j == 0)
+				break;
+		}
+		if (j > std::sqrt(i))
+			return i;
+	}
+	// It will only be executed when n is 3
+	return 2;
 }
 
 namespace _rand {

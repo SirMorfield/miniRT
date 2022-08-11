@@ -35,14 +35,18 @@ class Frame_buffer {
 	std::optional<Point2<size_t>> get_pixel();
 	void						  set_pixel(const Rgb& color, size_t x, size_t y);
 	void						  save_to_BMP() const;
+	size_t						  max_i() const { return _x_size * _y_size; }
 
   private:
-	size_t			 _x_size;
-	size_t			 _y_size;
-	bool			 _log_progress;
+	const size_t	 _x_size;
+	const size_t	 _y_size;
+	const bool		 _log_progress;
 
 	size_t			 _i;
-	size_t			 _max_i;
+	size_t			 _offset;
+	const size_t	 _change;
+	size_t			 _pix_done;
+
 	std::vector<Rgb> _frame;
 	std::mutex		 _mutex;
 	Progress_logger	 _progress;
