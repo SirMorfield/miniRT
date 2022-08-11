@@ -13,7 +13,7 @@
 Random_counter::Random_counter(size_t max)
 	: _i(0),
 	  _offset(0),
-	  _change(std::max(3, closest_prime<size_t>(max / 10))),
+	  _change(std::max((size_t)3, closest_prime<size_t>(max / 10))),
 	  _done(0),
 	  _max(max) {}
 void Random_counter::reset() {
