@@ -17,9 +17,12 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 
+	env::print();
+
 	Time  scene_parse_time("Parsed scene in");
 	Scene scene(path);
 	scene_parse_time.print();
+	std::cout << scene << std::endl;
 
 	const Resolution resolution = scene.resolution;
 	std::cout << resolution << std::endl;
@@ -27,9 +30,6 @@ int main(int argc, char* argv[]) {
 	Frame_buffer			 fb(resolution, env::log_progress);
 	Renderer				 renderer(resolution);
 	std::vector<std::thread> threads(env::threads);
-
-	std::cout << scene << std::endl;
-	env::print();
 
 	for (size_t i = 0; i < threads.capacity(); i++)
 		threads[i] = std::thread(&Renderer::thread, &renderer, scene, &fb);
