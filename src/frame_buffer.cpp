@@ -52,7 +52,8 @@ std::ostream& operator<<(std::ostream& os, const Resolution& res) {
 	os << "Resolution\n";
 	os << "  Size           : " << res.width() << "X" << res.height() << " " << res.AA_level() << "AA\n";
 	os << "  Pixels         : " << res.width() * res.height() << "\n";
-	os << "  Virtual pixels : " << res.width() * res.height() * res.AA_level() << "\n";
+	const size_t virtual_pixels = res.width() * res.height() * res.AA_level();
+	os << "  Virtual pixels : " << virtual_pixels << " or " << std::scientific << (double)virtual_pixels << "\n";
 	return os;
 }
 
