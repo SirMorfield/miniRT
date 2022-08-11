@@ -1,6 +1,7 @@
 #pragma once
 #include "vector.hpp"
 #include <algorithm>
+#include <cassert>
 #include <functional>
 #include <iostream>
 #include <optional>
