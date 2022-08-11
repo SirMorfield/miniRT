@@ -10,49 +10,65 @@
 
 #define HEADER_SIZE 54
 
-static size_t get_change(size_t x_size, size_t y_size) {
-	if (x_size <= 1 || y_size <= 1)
-		return 1;
-	return 7;
-	size_t pix = (x_size * y_size) / 10;
-	size_t change = pix < 3 ? 3 : closest_prime(pix);
-	assert(change % 2);
-	return change;
+Random_counter::Random_counter(size_t max)
+	: _i(0),
+	  _offset(0),
+	  _change(std::max(3, closest_prime<size_t>(max / 10))),
+	  _done(0),
+	  _max(max) {}
+void Random_counter::reset() {
+	_i = 0;
+	_offset = 0;
+	_done = 0;
 }
+
+std::optional<size_t> Random_counter::next() {
+	if (_done >= _max)
+		return {};
+
+	_i += _change;
+	if (_i > _max)
+		_i = ++_offset;
+	_done++;
+	return _i;
+}
+
+size_t Random_counter::get() const { return _i; }
 
 Frame_buffer::Frame_buffer(size_t x_size, size_t y_size, bool log_progress)
 	: _x_size(x_size),
 	  _y_size(y_size),
 	  _log_progress(log_progress),
-	  _i(0),
-	  _offset(0),
-	  _change(get_change(x_size, y_size)),
+	  _i(x_size * y_size),
 	  _pix_done(0) {
-
-	//   _change(closest_prime((_x_size * _y_size) / 1000) + 5) {
 
 	_frame.resize(x_size * y_size);
 	for (size_t i = 0; i < _frame.size(); i++)
 		_frame.at(i) = Rgb(255, 0, 0);
 }
 
-// TODO: get random pixel instead of sequencial
+// // TODO: get random pixel instead of sequencial
 std::optional<Point2<size_t>> Frame_buffer::get_pixel() {
 	_mutex.lock();
 	std::optional<Point2<size_t>> pixel;
-	if (_pix_done < _frame.size()) {
-		_i += _change;
-		if (_i > _frame.size())
-			_i = ++_offset;
-		_pix_done++;
-		pixel = Point2<size_t>((_i - 1) % _x_size, (_i - 1) / _x_size);
-		std::cout << pad_start(std::to_string(_i), 5, '0') << std::endl;
-	}
-	if (_log_progress && pixel.has_value()) {
-		if (_i == 1)
-			_progress.start();
-		_progress.print((_pix_done / (float)_frame.size()) * 100);
-	}
+
+	if (_pix_done >= _frame.size())
+		goto end;
+
+	if (!_i.next().has_value())
+		goto end;
+
+	pixel = Point2<size_t>((_i.get() - 1) % _x_size, (_i.get() - 1) / _x_size);
+	_pix_done++;
+
+	if (!_log_progress)
+		goto end;
+
+	if (_pix_done == 1)
+		_progress.start();
+	_progress.print((_pix_done / (float)_frame.size()) * 100);
+
+end:
 	_mutex.unlock();
 	return pixel;
 }

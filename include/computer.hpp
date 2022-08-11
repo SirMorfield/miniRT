@@ -29,6 +29,21 @@ class Scene {
 
 std::ostream& operator<<(std::ostream& o, const Scene& scene);
 
+class Random_counter {
+  public:
+	Random_counter(size_t max);
+	std::optional<size_t> next();
+	size_t				  get() const;
+	void				  reset();
+
+  private:
+	size_t		 _i;
+	size_t		 _offset;
+	const size_t _change;
+	size_t		 _done;
+	const size_t _max;
+};
+
 class Frame_buffer {
   public:
 	Frame_buffer(size_t x_size, size_t y_size, bool log_progress = false);
@@ -42,9 +57,7 @@ class Frame_buffer {
 	const size_t	 _y_size;
 	const bool		 _log_progress;
 
-	size_t			 _i;
-	size_t			 _offset;
-	const size_t	 _change;
+	Random_counter	 _i;
 	size_t			 _pix_done;
 
 	std::vector<Rgb> _frame;
