@@ -49,7 +49,10 @@ Resolution::Resolution(Resolution::Standard_size standard_size, size_t AA_level)
 	}
 }
 std::ostream& operator<<(std::ostream& os, const Resolution& res) {
-	os << res.width() << "X" << res.height() << " " << res.AA_level() << "AA";
+	os << "Resolution\n";
+	os << "  Size           : " << res.width() << "X" << res.height() << " " << res.AA_level() << "AA\n";
+	os << "  Pixels         : " << res.width() * res.height() << "\n";
+	os << "  Virtual pixels : " << res.width() * res.height() * res.AA_level() << "\n";
 	return os;
 }
 
@@ -78,14 +81,13 @@ std::optional<size_t> Random_counter::next() {
 
 size_t Random_counter::get() const { return _i; }
 
-Frame_buffer::Frame_buffer(size_t x_size, size_t y_size, bool log_progress)
-	: _x_size(x_size),
-	  _y_size(y_size),
+Frame_buffer::Frame_buffer(const Resolution& resolution, bool log_progress)
+	: _resolution(resolution),
 	  _log_progress(log_progress),
-	  _i(x_size * y_size),
+	  _i(resolution.width() * resolution.width()),
 	  _pix_done(0) {
 
-	_frame.resize(x_size * y_size);
+	_frame.resize(resolution.width() * resolution.width());
 	for (size_t i = 0; i < _frame.size(); i++)
 		_frame.at(i) = Rgb(255, 0, 0);
 }
@@ -101,7 +103,7 @@ std::optional<Point2<size_t>> Frame_buffer::get_pixel() {
 	if (!_i.next().has_value())
 		goto end;
 
-	pixel = Point2<size_t>((_i.get() - 1) % _x_size, (_i.get() - 1) / _x_size);
+	pixel = Point2<size_t>((_i.get() - 1) % _resolution.width(), (_i.get() - 1) / _resolution.width());
 	_pix_done++;
 
 	if (!_log_progress)
@@ -117,12 +119,12 @@ end:
 }
 
 void Frame_buffer::set_pixel(const Rgb& color, size_t x, size_t y) {
-	_frame[y * _x_size + x] = color;
+	_frame[y * _resolution.width() + x] = color;
 }
 
 void Frame_buffer::save_to_BMP() const {
 	assert(_pix_done == _frame.size());
-	save_bmp(_x_size, _y_size, _frame, "scene.bmp");
+	save_bmp(_resolution.width(), _resolution.width(), _frame, "scene.bmp");
 }
 
 static size_t bmp_size(size_t x, size_t y) {

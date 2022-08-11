@@ -6,7 +6,7 @@
 #include <fstream>
 #include <functional>
 
-Scene::Scene() : resolution(env::width, env::height) {
+Scene::Scene() : resolution(env::width, env::height, env::anti_aliasing_level) {
 	_backgroundColor = Rgb(0, 0, 0);
 	Sphere sphere(Vec3(0.0f, 0.0f, 0.0f), Rgb(200, 200, 100), 1.0f);
 	_spheres.push_back(sphere);
@@ -26,7 +26,7 @@ bool is_comment(const std::string& line) {
 	return false;
 }
 
-Scene::Scene(const std::string& path) : resolution(env::width, env::height) {
+Scene::Scene(const std::string& path) : resolution(env::width, env::height, env::anti_aliasing_level) {
 	const AABB aabb(
 		Vec3(-std::numeric_limits<float>::infinity()),
 		Vec3(std::numeric_limits<float>::infinity()));

@@ -46,15 +46,14 @@ class Random_counter {
 
 class Frame_buffer {
   public:
-	Frame_buffer(size_t x_size, size_t y_size, bool log_progress = false);
+	Frame_buffer(const Resolution& resolution, bool log_progress = false);
 	std::optional<Point2<size_t>> get_pixel();
 	void						  set_pixel(const Rgb& color, size_t x, size_t y);
 	void						  save_to_BMP() const;
-	size_t						  max_i() const { return _x_size * _y_size; }
+	size_t						  max_i() const { return _resolution.width() * _resolution.height(); }
 
   private:
-	const size_t	 _x_size;
-	const size_t	 _y_size;
+	const Resolution _resolution;
 	const bool		 _log_progress;
 
 	Random_counter	 _i;
@@ -70,13 +69,11 @@ class Frame_buffer {
 
 class Renderer {
   public:
-	Renderer(size_t xSize, size_t ySize, size_t AA_level);
+	Renderer(const Resolution& resolution);
 	void thread(const Scene& scene, Frame_buffer* fb);
 
   private:
-	Ray	   ray_from_pixel(const Camera& camera, float x, float y) const;
-	size_t _x_size;
-	size_t _y_size;
-	size_t _AA_level;
-	float  _aspect_ratio;
+	Ray		   ray_from_pixel(const Camera& camera, float x, float y) const;
+	Resolution _resolution;
+	float	   _aspect_ratio;
 };

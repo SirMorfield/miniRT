@@ -4,17 +4,14 @@
 #include "util.hpp"
 #include <cmath>
 
-Renderer::Renderer(size_t xSize, size_t ySize, size_t AA_level) {
-	_x_size = xSize;
-	_y_size = ySize;
-	assert(AA_level == 1 || is_power_of_2(AA_level));
-	_AA_level = AA_level;
-	_aspect_ratio = (float)_x_size / _y_size;
+Renderer::Renderer(const Resolution& resolution)
+	: _resolution(resolution) {
+	_aspect_ratio = (float)_resolution.width() / _resolution.height();
 }
 
 Ray Renderer::ray_from_pixel(const Camera& camera, float x, float y) const {
-	float px = (2 * x / _x_size - 1) * _aspect_ratio * camera._fov_tan;
-	float py = (2 * y / (float)_y_size - 1) * camera._fov_tan;
+	float px = (2 * x / _resolution.width() - 1) * _aspect_ratio * camera._fov_tan;
+	float py = (2 * y / (float)_resolution.height() - 1) * camera._fov_tan;
 	Ray	  ray;
 	ray.origin = camera._pos;
 	Vec3 positiveX;
@@ -41,8 +38,8 @@ Rgb average_color(const std::vector<Rgb>& colors) {
 }
 
 void Renderer::thread(const Scene& scene, Frame_buffer* fb) {
-	std::vector<Rgb> colors(_AA_level * _AA_level);
-	const float		 aa = 1.0f / std::sqrt(_AA_level);
+	std::vector<Rgb> colors(_resolution.AA_level() * _resolution.AA_level());
+	const float		 aa = 1.0f / std::sqrt(_resolution.AA_level());
 
 	while (true) {
 		std::optional<Point2<size_t>> pixel = fb->get_pixel();
