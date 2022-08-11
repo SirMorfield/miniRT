@@ -60,7 +60,7 @@ class Progress_logger : public Time {
   public:
 	Progress_logger(
 		const std::string& label = "Progress",
-		float			   precision = 1.0f,
+		float			   precision = 0.1f,
 		size_t			   print_precision = 7);
 	void print(float percentage);
 
