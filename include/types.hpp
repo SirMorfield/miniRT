@@ -80,8 +80,21 @@ class Camera {
 
 class Resolution {
   public:
+	enum class Standard_size {
+		R_8K,
+		R_5K,
+		R_4K,
+		R_1080p,
+		R_720p,
+		R_480p,
+		R_360p,
+		R_240p,
+		R_144p,
+	};
+
 	Resolution() = delete;
-	Resolution(size_t width, size_t height) : _width(width), _height(height) {}
+	Resolution(size_t width, size_t height);
+	Resolution(Resolution::Standard_size standard_size);
 
 	size_t width() const { return _width; }
 	size_t height() const { return _height; }

@@ -10,6 +10,49 @@
 
 #define HEADER_SIZE 54
 
+Resolution::Resolution(size_t x, size_t y) : _width(x), _height(y) {}
+
+Resolution::Resolution(Resolution::Standard_size standard_size) {
+	switch (standard_size) {
+	case Resolution::Standard_size::R_8K:
+		this->_width = 7680;
+		this->_height = 4320;
+		break;
+	case Resolution::Standard_size::R_5K:
+		this->_width = 5120;
+		this->_height = 2880;
+		break;
+	case Resolution::Standard_size::R_4K:
+		this->_width = 3840;
+		this->_height = 2160;
+		break;
+	case Resolution::Standard_size::R_1080p:
+		this->_width = 1920;
+		this->_height = 1080;
+		break;
+	case Resolution::Standard_size::R_720p:
+		this->_width = 1280;
+		this->_height = 720;
+		break;
+	case Resolution::Standard_size::R_480p:
+		this->_width = 720;
+		this->_height = 480;
+		break;
+	case Resolution::Standard_size::R_360p:
+		this->_width = 640;
+		this->_height = 360;
+		break;
+	case Resolution::Standard_size::R_240p:
+		this->_width = 426;
+		this->_height = 240;
+		break;
+	case Resolution::Standard_size::R_144p:
+		this->_width = 256;
+		this->_height = 144;
+		break;
+	}
+}
+
 Random_counter::Random_counter(size_t max)
 	: _i(0),
 	  _offset(0),
