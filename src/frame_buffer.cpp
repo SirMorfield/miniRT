@@ -10,47 +10,47 @@
 
 #define HEADER_SIZE 54
 
-Resolution::Resolution(size_t x, size_t y) : _width(x), _height(y) {}
+Resolution::Resolution(size_t x, size_t y, size_t AA_level)
+	: _width(x),
+	  _height(y),
+	  _AA_level(AA_level) {
+	assert(_AA_level == 1 || is_power_of_2(_AA_level));
+}
 
-Resolution::Resolution(Resolution::Standard_size standard_size) {
+Resolution::Resolution(Resolution::Standard_size standard_size, size_t AA_level) {
 	switch (standard_size) {
 	case Resolution::Standard_size::R_8K:
-		this->_width = 7680;
-		this->_height = 4320;
+		new (this) Resolution(7680, 4320, AA_level);
 		break;
 	case Resolution::Standard_size::R_5K:
-		this->_width = 5120;
-		this->_height = 2880;
+		new (this) Resolution(5120, 2880, AA_level);
 		break;
 	case Resolution::Standard_size::R_4K:
-		this->_width = 3840;
-		this->_height = 2160;
+		new (this) Resolution(3840, 2160, AA_level);
 		break;
 	case Resolution::Standard_size::R_1080p:
-		this->_width = 1920;
-		this->_height = 1080;
+		new (this) Resolution(1920, 1080, AA_level);
 		break;
 	case Resolution::Standard_size::R_720p:
-		this->_width = 1280;
-		this->_height = 720;
+		new (this) Resolution(1280, 720, AA_level);
 		break;
 	case Resolution::Standard_size::R_480p:
-		this->_width = 720;
-		this->_height = 480;
+		new (this) Resolution(720, 480, AA_level);
 		break;
 	case Resolution::Standard_size::R_360p:
-		this->_width = 640;
-		this->_height = 360;
+		new (this) Resolution(640, 360, AA_level);
 		break;
 	case Resolution::Standard_size::R_240p:
-		this->_width = 426;
-		this->_height = 240;
+		new (this) Resolution(426, 240, AA_level);
 		break;
 	case Resolution::Standard_size::R_144p:
-		this->_width = 256;
-		this->_height = 144;
+		new (this) Resolution(256, 144, AA_level);
 		break;
 	}
+}
+std::ostream& operator<<(std::ostream& os, const Resolution& res) {
+	os << res.width() << "X" << res.height() << " " << res.AA_level() << "AA";
+	return os;
 }
 
 Random_counter::Random_counter(size_t max)

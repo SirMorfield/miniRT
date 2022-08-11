@@ -93,16 +93,19 @@ class Resolution {
 	};
 
 	Resolution() = delete;
-	Resolution(size_t width, size_t height);
-	Resolution(Resolution::Standard_size standard_size);
+	Resolution(size_t width, size_t height, size_t AA_level);
+	Resolution(Resolution::Standard_size standard_size, size_t AA_level);
 
 	size_t width() const { return _width; }
 	size_t height() const { return _height; }
+	size_t AA_level() const { return _AA_level; }
 
   private:
 	size_t _width;
 	size_t _height;
+	size_t _AA_level;
 };
+std::ostream& operator<<(std::ostream& os, const Resolution& res);
 
 template <typename T>
 class Point2 {

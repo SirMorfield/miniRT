@@ -123,5 +123,5 @@ void to_resolution(const std::vector<std::string>& blocks, Resolution& resolutio
 	std::optional<size_t> height = parse_int<size_t>(blocks.at(2));
 	if (!height)
 		return;
-	resolution = Resolution(*width, *height);
+	resolution = Resolution(*width, *height, 1);
 }
