@@ -1,4 +1,5 @@
 #include "util.hpp"
+#include "arithmetic.hpp"
 #include "vector.hpp"
 #include <cmath>
 #include <iomanip>
@@ -115,15 +116,3 @@ void Time::print() const {
 		std::cout << _label << ": ";
 	std::cout << this->duration_formatted(duration) << std::endl;
 }
-
-namespace _rand {
-
-float _float(float a, float b) {
-	return ((b - a) * ((float)rand() / (float)RAND_MAX)) + a;
-}
-
-Vec3 vec3(float a, float b) {
-	return Vec3(_float(a, b), _float(a, b), _float(a, b));
-}
-
-} // namespace _rand

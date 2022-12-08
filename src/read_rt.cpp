@@ -1,3 +1,4 @@
+#include "arithmetic.hpp"
 #include "io.hpp"
 #include "octree.hpp"
 #include "shapes.hpp"

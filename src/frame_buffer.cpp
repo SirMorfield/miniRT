@@ -1,4 +1,5 @@
 // This is very very bad
+#include "arithmetic.hpp"
 #include "computer.hpp"
 #include "io.hpp"
 #include "types.hpp"
@@ -19,33 +20,33 @@ Resolution::Resolution(size_t x, size_t y, size_t AA_level)
 
 Resolution::Resolution(Resolution::Standard_size standard_size, size_t AA_level) {
 	switch (standard_size) {
-	case Resolution::Standard_size::R_8K:
+	case Resolution::Standard_size::R_8K: {
 		new (this) Resolution(7680, 4320, AA_level);
-		break;
-	case Resolution::Standard_size::R_5K:
+	}
+	case Resolution::Standard_size::R_5K: {
 		new (this) Resolution(5120, 2880, AA_level);
-		break;
-	case Resolution::Standard_size::R_4K:
+	}
+	case Resolution::Standard_size::R_4K: {
 		new (this) Resolution(3840, 2160, AA_level);
-		break;
-	case Resolution::Standard_size::R_1080p:
+	}
+	case Resolution::Standard_size::R_1080p: {
 		new (this) Resolution(1920, 1080, AA_level);
-		break;
-	case Resolution::Standard_size::R_720p:
+	}
+	case Resolution::Standard_size::R_720p: {
 		new (this) Resolution(1280, 720, AA_level);
-		break;
-	case Resolution::Standard_size::R_480p:
+	}
+	case Resolution::Standard_size::R_480p: {
 		new (this) Resolution(720, 480, AA_level);
-		break;
-	case Resolution::Standard_size::R_360p:
+	}
+	case Resolution::Standard_size::R_360p: {
 		new (this) Resolution(640, 360, AA_level);
-		break;
-	case Resolution::Standard_size::R_240p:
+	}
+	case Resolution::Standard_size::R_240p: {
 		new (this) Resolution(426, 240, AA_level);
-		break;
-	case Resolution::Standard_size::R_144p:
+	}
+	case Resolution::Standard_size::R_144p: {
 		new (this) Resolution(256, 144, AA_level);
-		break;
+	}
 	}
 }
 std::ostream& operator<<(std::ostream& os, const Resolution& res) {
