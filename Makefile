@@ -3,8 +3,12 @@ NAME      		= miniRT
 
 CC          	= clang++
 CFLAGS      	= -Wall -Wextra  -pedantic -std=c++17 -Wshadow
-CFLAGS      	+= -O3
-# CFLAGS			+= -O0 -g3 -fsanitize=address
+
+ifdef DEBUG
+	CFLAGS		+= -g3 -fsanitize=address
+else
+	CFLAGS		+= -O3
+endif
 
 SRCEXT      	= cpp
 SRCDIR      	= src
@@ -46,6 +50,10 @@ $(BUILDDIR)/%.$(OBJEXT): %.$(SRCEXT) $(HEADERS)
 .PHONY: test
 test: $(NAME)
 	@./$(NAME) rt/dragon.rt
+
+# Make sure that you run `make fclean` if you alredy compiled without debug
+debug:
+	DEBUG=1 $(MAKE)
 
 clean:
 ifneq ($(BUILDDIR),.)

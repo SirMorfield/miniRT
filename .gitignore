@@ -7,7 +7,6 @@ mlx-test
 a.out
 test/
 scene.bmp
-.vscode/
 test.*
 
 /rt/
