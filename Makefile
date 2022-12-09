@@ -2,7 +2,7 @@
 NAME      		= miniRT
 
 CC          	= clang++
-CFLAGS      	= -Wall -Wextra  -pedantic -std=c++17 -Wshadow
+CFLAGS      	= -Wall -Wextra -pedantic -std=c++17 -Wshadow
 
 ifdef DEBUG
 	CFLAGS		+= -g3 -fsanitize=address
