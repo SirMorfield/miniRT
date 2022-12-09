@@ -59,8 +59,3 @@ class Progress_logger : public Time {
 
 	float		 _last_percentage;
 };
-
-template <typename T>
-bool is_power_of_2(T x, std::enable_if<std::is_integral<T>::value>* = nullptr) {
-	return (x != 0) && ((x & (x - 1)) == 0);
-}

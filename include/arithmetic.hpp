@@ -53,3 +53,8 @@ T closest_prime(T n, std::enable_if<std::is_integral<T>::value>* = nullptr) {
 	// It will only be executed when n is 3
 	return 2;
 }
+
+template <typename T>
+bool is_power_of_2(T x, std::enable_if<std::is_integral<T>::value>* = nullptr) {
+	return (x != 0) && ((x & (x - 1)) == 0);
+}
