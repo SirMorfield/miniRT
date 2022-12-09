@@ -28,6 +28,7 @@ class Sphere : public Shape {
 	Quadradic get_hitions(const Ray& ray) const;
 };
 
+#define USE_EIGEN
 class Triangle : public Shape {
   public:
 	Triangle(Rgb color, Vec3 p0, Vec3 p1, Vec3 p2);
@@ -41,9 +42,12 @@ class Triangle : public Shape {
 	Vec3 p0;
 	Vec3 p1;
 	Vec3 p2;
+
+#ifdef USE_EIGEN
 	Vec3 edge1;
 	Vec3 edge2;
 	Vec3 normal;
+#endif
 };
 
 class AABB {

@@ -1,21 +1,30 @@
 #include "shapes.hpp"
 #include "types.hpp"
-
+USE_EIGEN
 Triangle::Triangle(Rgb color, Vec3 p0, Vec3 p1, Vec3 p2) {
 	this->id = generateID();
 	this->color = color;
 	this->p0 = p0;
 	this->p1 = p1;
 	this->p2 = p2;
+#ifdef USE_EIGEN
 	this->edge1 = p1 - p0;
 	this->edge2 = p2 - p0;
-	this->normal = (p1 - p0).cross(p2 - p0);
+	this->normal = edge1.cross(edge2);
 	this->normal.normalize();
+#endif
 }
 
 Hit Triangle::hit(const Ray& ray) const {
 	Vec3   h, s, q;
 	double a, f, u, v;
+
+#ifndef USE_EIGEN
+	Vec3 edge1 = p1 - p0;
+	Vec3 edge2 = p2 - p0;
+	Vec3 normal = edge1.cross(edge2);
+	normal.normalize();
+#endif
 
 	h = ray.dir.cross(edge2);
 	a = edge1.dot(h);
