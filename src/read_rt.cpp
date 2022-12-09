@@ -1,4 +1,5 @@
 #include "arithmetic.hpp"
+#include "env.hpp"
 #include "io.hpp"
 #include "octree.hpp"
 #include "shapes.hpp"
@@ -90,7 +91,7 @@ std::optional<Camera> to_camera(const std::vector<std::string>& blocks) {
 	if (!origin)
 		return std::nullopt;
 
-	std::optional<Vec3> dir = parse_Vec3(blocks.at(2));
+	std::optional<Vec3> dir = parse_Vec3(blocks.at(2), !env::allow_abnormal_dir);
 	if (!dir)
 		return std::nullopt;
 	dir->normalize();

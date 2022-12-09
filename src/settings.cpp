@@ -5,7 +5,7 @@ namespace env {
 
 // Allow non-normalized direction vector in .rt file? :boolean
 const uint64_t threads = 4;
-const bool	   allow_abnormal_dir = false;
+const bool	   allow_abnormal_dir = true;
 const bool	   log_progress = true;
 
 // 1, 4, 16, 32, ect
