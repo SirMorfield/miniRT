@@ -1,6 +1,9 @@
 #pragma once
 #include <array>
+#include <cassert>
 #include <cmath>
+#include <functional>
+#include <iostream>
 
 template <typename T, size_t N>
 class Vec {
