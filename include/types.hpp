@@ -20,14 +20,6 @@ class Rgb {
 	uint8_t b;
 };
 
-class Ray {
-  public:
-	Ray() {}
-	Ray(Vec3 origin, Vec3 dir) : origin(origin), dir(dir) {}
-	Vec3 origin;
-	Vec3 dir;
-};
-
 typedef struct { // TODO better name
 	float t0;
 	float t1;
