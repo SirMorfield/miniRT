@@ -13,14 +13,25 @@ std::optional<Rgb> parse_Rgb(const std::string& s) {
 	Vec<int, 3> color;
 	if (sscanf(s.c_str(), "%d,%d,%d", &color.x(), &color.y(), &color.z()) == -1)
 		return std::nullopt;
-	Rgb rgb = Rgb(color.x(), color.y(), color.z());
-	return rgb;
+
+	if (color.x() < 0 || color.x() > 255)
+		return std::nullopt;
+	if (color.y() < 0 || color.y() > 255)
+		return std::nullopt;
+	if (color.z() < 0 || color.z() > 255)
+		return std::nullopt;
+
+	return Rgb(color.x(), color.y(), color.z());
 }
 
-std::optional<Vec3> parse_Vec3(const std::string& s) {
+std::optional<Vec3> parse_Vec3(const std::string& s, bool should_be_normalized = false) {
 	Vec3 v;
 	if (sscanf(s.c_str(), "%f,%f,%f", &v.x(), &v.y(), &v.z()) == -1)
 		return std::nullopt;
+
+	if (should_be_normalized && !almost_equal(v.length(), 1.0f))
+		return std::nullopt;
+
 	return v;
 }
 
@@ -82,6 +93,7 @@ std::optional<Camera> to_camera(const std::vector<std::string>& blocks) {
 	std::optional<Vec3> dir = parse_Vec3(blocks.at(2));
 	if (!dir)
 		return std::nullopt;
+	dir->normalize();
 
 	std::optional<float> fov = parse_number<float>(blocks.at(3));
 	if (!fov)
@@ -119,11 +131,11 @@ std::optional<Resolution> to_resolution(const std::vector<std::string>& blocks) 
 		return std::nullopt;
 
 	std::optional<size_t> width = parse_number<size_t>(blocks.at(1));
-	if (!width)
+	if (!width || *width <= 2)
 		return std::nullopt;
 
 	std::optional<size_t> height = parse_number<size_t>(blocks.at(2));
-	if (!height)
+	if (!height || *height <= 2)
 		return std::nullopt;
 
 	return Resolution(*width, *height, 1);
