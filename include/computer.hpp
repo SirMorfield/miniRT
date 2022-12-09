@@ -19,6 +19,7 @@ class Scene {
 
   private:
 	bool				 is_clear_path(const Vec3& point, const Light& light) const;
+	bool				 parse_line(const std::string& line);
 	std::vector<Sphere>	 _spheres;
 	Octree<Triangle>	 _triangles;
 	std::vector<Light>	 _lights;

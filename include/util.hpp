@@ -10,7 +10,7 @@
 ID generateID();
 
 template <typename T>
-std::optional<T> parse_int(const std::string& str) {
+std::optional<T> parse_number(const std::string& str) {
 	char			  c;
 	std::stringstream ss(str);
 	T				  result;

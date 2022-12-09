@@ -26,6 +26,50 @@ bool is_comment(const std::string& line) {
 	return false;
 }
 
+bool Scene::parse_line(const std::string& line) {
+	std::vector<std::string> blocks = split(line, ' ');
+	if (blocks.size() == 0)
+		return true;
+
+	std::optional<Sphere> sphere = to_sphere(blocks);
+	if (sphere) {
+		_spheres.push_back(*sphere);
+		return true;
+	}
+
+	std::optional<Triangle> triangle = to_triangle(blocks);
+	if (triangle) {
+		if (!_triangles.insert(*triangle))
+			throw std::runtime_error("Could not insert triangle");
+		return true;
+	}
+
+	std::optional<Light> light = to_light(blocks);
+	if (light) {
+		_lights.push_back(*light);
+		return true;
+	}
+
+	std::optional<Camera> camera = to_camera(blocks);
+	if (camera) {
+		_camera = *camera;
+		return true;
+	}
+
+	std::optional<Resolution> res = to_resolution(blocks);
+	if (res) {
+		if (env::read_resolution_from == Resolution_from::rt_file)
+			resolution = *res;
+		return true;
+	}
+
+	if (blocks.at(0) == "A" || blocks.at(0) == "pl") {
+		return true;
+	}
+
+	return false;
+}
+
 Scene::Scene(const std::string& path) : resolution(env::width, env::height, env::anti_aliasing_level) {
 	const AABB aabb(
 		Vec3(-std::numeric_limits<float>::infinity()),
@@ -36,18 +80,17 @@ Scene::Scene(const std::string& path) : resolution(env::width, env::height, env:
 
 	std::ifstream file(path);
 	if (!file.is_open())
-		throw "file not found";
+		throw std::runtime_error("Could not open file: " + path);
+
+	size_t		i = 0;
 	std::string line;
 	while (std::getline(file, line)) {
 		if (is_comment(line))
 			continue;
-		std::vector<std::string> blocks = split(line, ' ');
-		to_light(blocks, _lights);
-		to_camera(blocks, _camera);
-		to_sphere(blocks, _spheres);
-		to_triangle(blocks, _triangles);
-		if (env::read_resolution_from == Resolution_from::rt_file)
-			to_resolution(blocks, resolution);
+		if (!this->parse_line(line))
+			throw std::runtime_error("\nCould not parse file: " + path + ":" + std::to_string(i) + "\n\"" + line + "\"");
+
+		i++;
 	}
 	file.close();
 	_triangles.shirk_to_fit();

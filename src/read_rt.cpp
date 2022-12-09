@@ -9,120 +9,122 @@
 #include <sstream>
 
 // expect eg. "23,254,22"
-bool toRgb(Rgb& color, const std::string& s) {
-	int r;
-	int g;
-	int b;
-	if (sscanf(s.c_str(), "%d,%d,%d", &r, &g, &b) == -1)
-		return false;
-	color.x() = r;
-	color.y() = g;
-	color.z() = b;
-	return true;
+std::optional<Rgb> parse_Rgb(const std::string& s) {
+	Vec<int, 3> color;
+	if (sscanf(s.c_str(), "%d,%d,%d", &color.x(), &color.y(), &color.z()) == -1)
+		return std::nullopt;
+	Rgb rgb = Rgb(color.x(), color.y(), color.z());
+	return rgb;
 }
 
-bool toVec3(Vec3& p, const std::string& s) {
-	float x;
-	float y;
-	float z;
-	if (sscanf(s.c_str(), "%f,%f,%f", &x, &y, &z) == -1)
-		return false;
-	p.x() = x;
-	p.y() = y;
-	p.z() = z;
-	return true;
+std::optional<Vec3> parse_Vec3(const std::string& s) {
+	Vec3 v;
+	if (sscanf(s.c_str(), "%f,%f,%f", &v.x(), &v.y(), &v.z()) == -1)
+		return std::nullopt;
+	return v;
 }
 
-bool toFloat(float& f, const std::string& s) {
-	try {
-		f = std::stof(s);
-		return true;
-	} catch (const std::exception& e) {
-		return false;
-	}
-}
-
-void to_light(const std::vector<std::string>& blocks, std::vector<Light>& lights) {
+std::optional<Light> to_light(const std::vector<std::string>& blocks) {
 	if (blocks.size() != 4)
-		return;
+		return std::nullopt;
+
 	if (blocks.at(0) != "l")
-		return;
-	Vec3 origin;
-	if (!toVec3(origin, blocks.at(1)))
-		return;
-	float brightness;
-	if (!toFloat(brightness, blocks.at(2)))
-		return;
-	Rgb color;
-	if (!toRgb(color, blocks.at(3)))
-		return;
-	lights.push_back(Light(color, origin, brightness));
+		return std::nullopt;
+
+	std::optional<Vec3> origin = parse_Vec3(blocks.at(1));
+	if (!origin)
+		return std::nullopt;
+
+	std::optional<float> brightness = parse_number<float>(blocks.at(2));
+	if (!brightness)
+		return std::nullopt;
+
+	std::optional<Rgb> color = parse_Rgb(blocks.at(3));
+	if (!color)
+		return std::nullopt;
+
+	return Light(*color, *origin, *brightness);
 }
 
-void to_sphere(const std::vector<std::string>& blocks, std::vector<Sphere>& spheres) {
+std::optional<Sphere> to_sphere(const std::vector<std::string>& blocks) {
 	if (blocks.size() != 4)
-		return;
+		return std::nullopt;
+
 	if (blocks.at(0) != "sp")
-		return;
-	Vec3 origin;
-	if (!toVec3(origin, blocks.at(1)))
-		return;
-	float radius;
-	if (!toFloat(radius, blocks.at(2)))
-		return;
-	Rgb color;
-	if (!toRgb(color, blocks.at(3)))
-		return;
-	spheres.push_back(Sphere(origin, color, radius));
+		return std::nullopt;
+
+	std::optional<Vec3> origin = parse_Vec3(blocks.at(1));
+	if (!origin)
+		return std::nullopt;
+
+	std::optional<float> radius = parse_number<float>(blocks.at(2));
+	if (!radius)
+		return std::nullopt;
+
+	std::optional<Rgb> color = parse_Rgb(blocks.at(3));
+	if (!color)
+		return std::nullopt;
+
+	return Sphere(*origin, *color, *radius);
 }
 
-void to_camera(const std::vector<std::string>& blocks, Camera& camera) {
+std::optional<Camera> to_camera(const std::vector<std::string>& blocks) {
 	if (blocks.size() != 4)
-		return;
+		return std::nullopt;
+
 	if (blocks.at(0) != "c")
-		return;
-	Vec3 origin;
-	if (!toVec3(origin, blocks.at(1)))
-		return;
-	Vec3 dir;
-	if (!toVec3(dir, blocks.at(2)))
-		return;
-	float fov;
-	if (!toFloat(fov, blocks.at(3)))
-		return;
-	camera = Camera(origin, dir, radians(fov));
+		return std::nullopt;
+
+	std::optional<Vec3> origin = parse_Vec3(blocks.at(1));
+	if (!origin)
+		return std::nullopt;
+
+	std::optional<Vec3> dir = parse_Vec3(blocks.at(2));
+	if (!dir)
+		return std::nullopt;
+
+	std::optional<float> fov = parse_number<float>(blocks.at(3));
+	if (!fov)
+		return std::nullopt;
+
+	return Camera(*origin, *dir, radians(*fov));
 }
 
-void to_triangle(const std::vector<std::string>& blocks, Octree<Triangle>& triangles) {
+std::optional<Triangle> to_triangle(const std::vector<std::string>& blocks) {
 	if (blocks.size() != 5)
-		return;
+		return std::nullopt;
+
 	if (blocks.at(0) != "tr")
-		return;
-	Vec3 p0;
-	if (!toVec3(p0, blocks.at(1)))
-		return;
-	Vec3 p1;
-	if (!toVec3(p1, blocks.at(2)))
-		return;
-	Vec3 p2;
-	if (!toVec3(p2, blocks.at(3)))
-		return;
-	Rgb color;
-	if (!toRgb(color, blocks.at(4)))
-		return;
-	triangles.push_back(Triangle(color, p0, p1, p2));
+		return std::nullopt;
+	std::optional<Vec3> p0 = parse_Vec3(blocks.at(1));
+	if (!p0)
+		return std::nullopt;
+	std::optional<Vec3> p1 = parse_Vec3(blocks.at(2));
+	if (!p1)
+		return std::nullopt;
+	std::optional<Vec3> p2 = parse_Vec3(blocks.at(3));
+	if (!p2)
+		return std::nullopt;
+	std::optional<Rgb> color = parse_Rgb(blocks.at(4));
+	if (!color)
+		return std::nullopt;
+	return Triangle(*color, *p0, *p1, *p2);
 }
 
-void to_resolution(const std::vector<std::string>& blocks, Resolution& resolution) {
+std::optional<Resolution> to_resolution(const std::vector<std::string>& blocks) {
 	if (blocks.size() != 3)
-		return;
+		return std::nullopt;
+
 	if (blocks.at(0) != "R")
-		return;
-	std::optional<size_t> width = parse_int<size_t>(blocks.at(1));
+		return std::nullopt;
+
+	std::optional<size_t> width = parse_number<size_t>(blocks.at(1));
 	if (!width)
-		return;
-	std::optional<size_t> height = parse_int<size_t>(blocks.at(2));
+		return std::nullopt;
+
+	std::optional<size_t> height = parse_number<size_t>(blocks.at(2));
 	if (!height)
-		return;
-	resolution = Resolution(*width, *height, 1);
+		return std::nullopt;
+
+	return Resolution(*width, *height, 1);
 }
