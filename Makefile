@@ -42,8 +42,10 @@ $(NAME): $(BUILDDIR)/ $(OBJ) $(HEADERS)
 $(BUILDDIR)/%.$(OBJEXT): %.$(SRCEXT) $(HEADERS)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(BUILDDIR)/$(notdir $@)
 	@printf '\r\033[1A\033[0K$@ Compiled $(BUILDDIR)/$(notdir $@)\n'
-# sources
 
+.PHONY: test
+test: $(NAME)
+	@./$(NAME) rt/dragon.rt
 
 clean:
 ifneq ($(BUILDDIR),.)
