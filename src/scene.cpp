@@ -99,11 +99,9 @@ Scene::Scene(const std::string& path) : resolution(env::width, env::height, env:
 
 std::ostream& operator<<(std::ostream& o, const Scene& scene) {
 	o << "Scene:\n";
-	o << "  resolution: " << scene.resolution.width() << "x" << scene.resolution.height() << "\n";
-	o << "  pixels    : " << scene.resolution.width() * scene.resolution.height() << "\n";
-	o << "  lights    : " << scene._lights.size() << "\n";
-	o << "  spheres   : " << scene._spheres.size() << "\n";
-	o << "  triangles : " << scene._triangles.size() << "\n";
+	o << "  lights    : " << std::scientific << (double)scene._lights.size() << "\n";
+	o << "  spheres   : " << std::scientific << (double)scene._spheres.size() << "\n";
+	o << "  triangles : " << std::scientific << (double)scene._triangles.size() << "\n";
 	return o;
 }
 
