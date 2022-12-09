@@ -82,12 +82,15 @@ Rgb Scene::get_color(const Ray& ray) const {
 	if (!hit.hit)
 		return _backgroundColor;
 
-	Rgb lightAccumulator = Rgb(0, 0, 0);
+	Vec3 lightAccumulator = Vec3(0);
 	for (auto& light : _lights) {
 		if (!is_clear_path(hit.point, light))
 			continue;
 		float relativeIntensity = light.relative_intensity(hit.point, hit.normal);
-		lightAccumulator.add(light._color, relativeIntensity);
+		lightAccumulator += light._color * relativeIntensity;
 	}
-	return mix_color(lightAccumulator, hit.color);
+
+	Rgb color(0);
+	color += lightAccumulator.min(Vec3(255, 255, 255));
+	return mix_color(color, hit.color);
 }

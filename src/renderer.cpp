@@ -15,7 +15,7 @@ Ray Renderer::ray_from_pixel(const Camera& camera, float x, float y) const {
 	Ray	  ray;
 	ray.origin = camera._pos;
 	Vec3 positiveX;
-	if (camera._dir.x == 0.0 && camera._dir.z == 0.0)
+	if (camera._dir.x() == 0.0 && camera._dir.z() == 0.0)
 		positiveX = Vec3(1.0, 0.0, 0.0);
 	else
 		positiveX = camera._dir.cross(Vec3(0.0, 1.0, 0.0));
@@ -29,12 +29,12 @@ Rgb average_color(const std::vector<Rgb>& colors) {
 	Vec3 color(0);
 
 	for (const Rgb& c : colors)
-		color += Vec3(c.r, c.g, c.b);
+		color += Vec3(c.x(), c.y(), c.z());
 
 	color /= colors.size();
-	return Rgb(std::round(color.x),
-			   std::round(color.y),
-			   std::round(color.z));
+	return Rgb(std::round(color.x()),
+			   std::round(color.y()),
+			   std::round(color.z()));
 }
 
 void Renderer::thread(const Scene& scene, Frame_buffer* fb) {
@@ -42,17 +42,17 @@ void Renderer::thread(const Scene& scene, Frame_buffer* fb) {
 	const float		 aa = 1.0f / std::sqrt(_resolution.AA_level());
 
 	while (true) {
-		std::optional<Point2<size_t>> pixel = fb->get_pixel();
+		std::optional<Vec<size_t, 2>> pixel = fb->get_pixel();
 		if (!pixel.has_value())
 			break;
 
 		for (float y_off = EPSILON; y_off < 1.0f; y_off += aa) {
 			for (float x_off = EPSILON; x_off < 1.0f; x_off += aa) {
-				Ray ray = ray_from_pixel(scene._camera, pixel->x + x_off, pixel->y + y_off);
+				Ray ray = ray_from_pixel(scene._camera, pixel->x() + x_off, pixel->y() + y_off);
 				colors.push_back(scene.get_color(ray));
 			}
 		}
-		fb->set_pixel(average_color(colors), pixel->x, pixel->y);
+		fb->set_pixel(average_color(colors), pixel->x(), pixel->y());
 		colors.clear();
 	}
 }

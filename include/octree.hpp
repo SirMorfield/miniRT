@@ -86,13 +86,13 @@ class Octree {
 		for (const T& shape : this->_shapes) {
 			const AABB& shape_AABB = shape.get_AABB();
 
-			min.x = std::max(min.x, shape_AABB._min.x);
-			min.y = std::max(min.y, shape_AABB._min.y);
-			min.z = std::max(min.z, shape_AABB._min.z);
+			min.x() = std::max(min.x(), shape_AABB._min.x());
+			min.y() = std::max(min.y(), shape_AABB._min.y());
+			min.z() = std::max(min.z(), shape_AABB._min.z());
 
-			max.x = std::min(max.x, shape_AABB._max.x);
-			max.y = std::min(max.y, shape_AABB._max.y);
-			max.z = std::min(max.z, shape_AABB._max.z);
+			max.x() = std::min(max.x(), shape_AABB._max.x());
+			max.y() = std::min(max.y(), shape_AABB._max.y());
+			max.z() = std::min(max.z(), shape_AABB._max.z());
 		}
 
 		this->_aabb = AABB(max, min);

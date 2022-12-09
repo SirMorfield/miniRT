@@ -9,17 +9,6 @@
 #include <vector>
 #define EPSILON 1e-8
 
-class Rgb {
-  public:
-	Rgb() {}
-	Rgb(uint8_t r, uint8_t g, uint8_t b);
-	void	add(const Rgb& color, float intensity);
-
-	uint8_t r;
-	uint8_t g;
-	uint8_t b;
-};
-
 typedef struct { // TODO better name
 	float t0;
 	float t1;
@@ -98,12 +87,4 @@ class Resolution {
 	size_t _AA_level;
 };
 std::ostream& operator<<(std::ostream& os, const Resolution& res);
-
-template <typename T>
-class Point2 {
-  public:
-	Point2(){};
-	Point2(T x, T y) : x(x), y(y) {}
-	T x;
-	T y;
-};
+;

@@ -15,9 +15,9 @@ bool toRgb(Rgb& color, const std::string& s) {
 	int b;
 	if (sscanf(s.c_str(), "%d,%d,%d", &r, &g, &b) == -1)
 		return false;
-	color.r = r;
-	color.g = g;
-	color.b = b;
+	color.x() = r;
+	color.y() = g;
+	color.z() = b;
 	return true;
 }
 
@@ -27,9 +27,9 @@ bool toVec3(Vec3& p, const std::string& s) {
 	float z;
 	if (sscanf(s.c_str(), "%f,%f,%f", &x, &y, &z) == -1)
 		return false;
-	p.x = x;
-	p.y = y;
-	p.z = z;
+	p.x() = x;
+	p.y() = y;
+	p.z() = z;
 	return true;
 }
 

@@ -47,7 +47,7 @@ class Random_counter {
 class Frame_buffer {
   public:
 	Frame_buffer(const Resolution& resolution, bool log_progress = false);
-	std::optional<Point2<size_t>> get_pixel();
+	std::optional<Vec<size_t, 2>> get_pixel();
 	void						  set_pixel(const Rgb& color, size_t x, size_t y);
 	void						  save_to_BMP() const;
 	size_t						  max_i() const { return _resolution.width() * _resolution.height(); }

@@ -95,9 +95,9 @@ Frame_buffer::Frame_buffer(const Resolution& resolution, bool log_progress)
 }
 
 // // TODO: get random pixel instead of sequencial
-std::optional<Point2<size_t>> Frame_buffer::get_pixel() {
+std::optional<Vec<size_t, 2>> Frame_buffer::get_pixel() {
 	_mutex.lock();
-	std::optional<Point2<size_t>> pixel;
+	std::optional<Vec<size_t, 2>> pixel;
 
 	if (_pix_done >= _frame.size())
 		goto end;
@@ -105,7 +105,7 @@ std::optional<Point2<size_t>> Frame_buffer::get_pixel() {
 	if (!_i.next().has_value())
 		goto end;
 
-	pixel = Point2<size_t>((_i.get() - 1) % _resolution.width(), (_i.get() - 1) / _resolution.width());
+	pixel = Vec<size_t, 2>((_i.get() - 1) % _resolution.width(), (_i.get() - 1) / _resolution.width());
 	_pix_done++;
 
 	if (!_log_progress)
@@ -181,9 +181,9 @@ bool save_bmp(size_t xSize, size_t ySize, const std::vector<Rgb>& frame, const s
 		size_t x = 0;
 		while (x < xSize) {
 			const Rgb pixel = frame[y * xSize + x];
-			buf[buf_i + 0] = pixel.r;
-			buf[buf_i + 1] = pixel.g;
-			buf[buf_i + 2] = pixel.b;
+			buf[buf_i + 0] = pixel.x();
+			buf[buf_i + 1] = pixel.y();
+			buf[buf_i + 2] = pixel.z();
 			buf_i += 3;
 			x++;
 		}
