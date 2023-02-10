@@ -39,8 +39,7 @@ bool Scene::parse_line(const std::string& line) {
 
 	std::optional<Triangle> triangle = to_triangle(blocks);
 	if (triangle) {
-		if (!_triangles.insert(*triangle))
-			throw std::runtime_error("Could not insert triangle");
+		_triangles.push_back(*triangle);
 		return true;
 	}
 
