@@ -1,21 +1,37 @@
 {
-    "tasks": [
-        {
-            "type": "cppbuild",
-            "label": "make",
-            "command": "make",
-            "args": ["debug"],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        }
-    ],
-    "version": "2.0.0"
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "make",
+			"type": "cppbuild",
+			"command": "make",
+			"args": ["debug"],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+		},
+		{
+			"label": "make rpc",
+			"type": "cppbuild",
+			"command": "make",
+			"args": ["debug"],
+			"options": {
+				"cwd": "${workspaceFolder}/distributed"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	],
 }

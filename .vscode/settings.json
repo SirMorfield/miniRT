@@ -2,5 +2,10 @@
 	"C_Cpp.default.includePath": [
 		"${workspaceFolder}/distributed/include",
 		"${workspaceFolder}/include",
-	]
+	],
+	"files.associations": {
+		"*.ts": "typescript",
+		"vector": "cpp",
+		"locale": "cpp"
+	}
 }

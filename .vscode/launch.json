@@ -1,20 +1,30 @@
 
 
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Debug program",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/miniRT",
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Debug program",
+			"preLaunchTask": "make",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/miniRT",
 			"args": ["rt/dragon.rt"],
 			"cwd": "${workspaceFolder}",
-			"preLaunchTask": "make",
-            "MIMode": "lldb"
+			"MIMode": "lldb"
+		},
+		{
+            "name": "Start rpc server",
+			"preLaunchTask": "make rpc",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/distributed/rpc",
+			"args": ["server", "4242"],
+			"cwd": "${workspaceFolder}/distributed",
+            "MIMode": "lldb",
         }
-    ]
+	]
 }
