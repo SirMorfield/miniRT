@@ -1,5 +1,3 @@
-
-
 {
 	// Use IntelliSense to learn about possible attributes.
 	// Hover to view descriptions of existing attributes.
@@ -17,14 +15,24 @@
 			"MIMode": "lldb"
 		},
 		{
-            "name": "Start rpc server",
+			"name": "Start rpc server",
 			"preLaunchTask": "make rpc",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/distributed/rpc",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/distributed/rpc",
 			"args": ["server", "4242"],
 			"cwd": "${workspaceFolder}/distributed",
-            "MIMode": "lldb",
-        }
+			"MIMode": "lldb",
+		},
+		{
+			"name": "Start rpc client",
+			"preLaunchTask": "make rpc",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/distributed/rpc",
+			"args": ["client", "127.0.0.1", "4242"],
+			"cwd": "${workspaceFolder}/distributed",
+			"MIMode": "lldb",
+		}
 	]
 }
