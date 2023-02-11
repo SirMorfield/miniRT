@@ -141,6 +141,6 @@ class Poller {
 	std::map<fd_t, Buffer>	   _buffers;
 
 	// disabled
-	Poller(const Poller& cp);
-	Poller& operator=(const Poller& cp);
+	Poller(const Poller& cp) = delete;
+	Poller& operator=(const Poller& cp) = delete;
 };
