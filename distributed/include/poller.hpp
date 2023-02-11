@@ -42,6 +42,11 @@ enum class Fd_type {
 	CLOSED
 };
 
+enum class IO_status {
+	DONE,
+	ERROR
+};
+
 class Buffer {
   public:
 	Buffer() {}
@@ -60,27 +65,29 @@ class Buffer {
 			exit_with::message("Invalid socket fd");
 	}
 
-	void read() {
+	IO_status read() {
 		static char buf[1024];
-		ssize_t		bytes_read = ::read(fd, buf, sizeof(buf));
-		if (bytes_read < 0)
-			return; // todo
-		if (bytes_read == 0)
-			return;
-		for (int i = 0; i < bytes_read; i++) {
-			_buffer.push_back(buf[i]);
+		while (true) {
+			ssize_t bytes_read = ::read(fd, buf, sizeof(buf));
+			if (bytes_read < 0)
+				return IO_status::DONE; // todo
+			if (bytes_read == 0)
+				return IO_status::DONE;
+			for (int i = 0; i < bytes_read; i++) {
+				_buffer.push_back(buf[i]);
+			}
 		}
-		this->read();
 	}
 
-	void write() {
-		ssize_t bytes_written = ::write(fd, _buffer.data(), _buffer.size());
-		if (bytes_written < 0)
-			return; // todo
-		if (bytes_written == 0)
-			return;
-		_buffer.erase(_buffer.begin(), _buffer.begin() + bytes_written);
-		this->write();
+	IO_status write() {
+		while (true) {
+			ssize_t bytes_written = ::write(fd, _buffer.data(), _buffer.size());
+			if (bytes_written < 0)
+				return IO_status::DONE; // todo
+			if (bytes_written == 0)
+				return IO_status::DONE;
+			_buffer.erase(_buffer.begin(), _buffer.begin() + bytes_written);
+		}
 	}
 
 	bool				  empty() const { return _buffer.empty(); }
