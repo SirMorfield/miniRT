@@ -67,27 +67,29 @@ class Buffer {
 			return; // todo
 		if (bytes_read == 0)
 			return;
-		_buffer.append(buf, bytes_read);
+		for (int i = 0; i < bytes_read; i++) {
+			_buffer.push_back(buf[i]);
+		}
 		this->read();
 	}
 
 	void write() {
-		ssize_t bytes_written = ::write(fd, _buffer.c_str(), _buffer.size());
+		ssize_t bytes_written = ::write(fd, _buffer.data(), _buffer.size());
 		if (bytes_written < 0)
 			return; // todo
 		if (bytes_written == 0)
 			return;
-		_buffer.erase(0, bytes_written);
+		_buffer.erase(_buffer.begin(), _buffer.begin() + bytes_written);
 		this->write();
 	}
 
-	bool		 empty() const { return _buffer.empty(); }
-	std::string& buffer() { return _buffer; }
+	bool				  empty() const { return _buffer.empty(); }
+	std::vector<uint8_t>& buffer() { return _buffer; }
 
 	Buffer(Buffer&& mv) = delete;
 	//   private:
-	fd_t		fd;
-	std::string _buffer;
+	fd_t				 fd;
+	std::vector<uint8_t> _buffer;
 };
 
 class Poller {
