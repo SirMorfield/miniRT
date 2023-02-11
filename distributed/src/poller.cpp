@@ -55,30 +55,27 @@ void Poller::on_poll(pollfd pfd) {
 	}
 }
 
-void Poller::start() {
-	std::cout << "listening" << std::endl;
-	while (true) {
-		int rc = poll(_pollfds.data(), _pollfds.size(), -1);
-		if (rc < 0)
-			exit_with::perror("poll() failed");
-		if (rc == 0)
-			exit_with::perror("poll() timeout");
-		for (size_t i = 0; i < _pollfds.size(); i++) {
-			if (_pollfds[i].revents == 0)
-				continue;
-			on_poll(_pollfds[i]);
-		}
-		// removing closed fds from array by shifting them to the left
-		std::vector<struct pollfd>::iterator valid = _pollfds.begin();
-		std::vector<struct pollfd>::iterator current = _pollfds.begin();
-		while (current != _pollfds.end()) {
-			if (_fd_types.find(current->fd) == _fd_types.end() || _fd_types.at(current->fd) == Fd_type::CLOSED) {
-				_fd_types.erase(current->fd);
-				++current;
-				continue;
-			}
-			*valid++ = *current++;
-		}
-		_pollfds.erase(valid, _pollfds.end());
+void Poller::poll() {
+	int rc = ::poll(_pollfds.data(), _pollfds.size(), -1);
+	if (rc < 0)
+		exit_with::perror("poll() failed");
+	if (rc == 0)
+		exit_with::perror("poll() timeout");
+	for (size_t i = 0; i < _pollfds.size(); i++) {
+		if (_pollfds[i].revents == 0)
+			continue;
+		on_poll(_pollfds[i]);
 	}
+	// removing closed fds from array by shifting them to the left
+	std::vector<struct pollfd>::iterator valid = _pollfds.begin();
+	std::vector<struct pollfd>::iterator current = _pollfds.begin();
+	while (current != _pollfds.end()) {
+		if (_fd_types.find(current->fd) == _fd_types.end() || _fd_types.at(current->fd) == Fd_type::CLOSED) {
+			_fd_types.erase(current->fd);
+			++current;
+			continue;
+		}
+		*valid++ = *current++;
+	}
+	_pollfds.erase(valid, _pollfds.end());
 }

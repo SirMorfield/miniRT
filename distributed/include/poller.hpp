@@ -112,7 +112,7 @@ class Poller {
 		_fd_types[pfd.fd] = Fd_type::SERVER;
 	}
 
-	void start();
+	void poll();
 	~Poller() {}
 
   private:
