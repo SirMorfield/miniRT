@@ -25,18 +25,24 @@ struct Socket {
 	void close();
 };
 
-class Server_socket : public Socket {
-  public:
-	Server_socket() = delete;
-	Server_socket(uint16_t port);
-
-	Socket accept();
-};
-
 class Client_socket : public Socket {
   public:
 	Client_socket() = delete;
-	Client_socket(const std::string& host, uint16_t port);
+	Client_socket(const std::string& host, uint16_t port) {
+		std::cout << fd << std::endl;
+		struct sockaddr_in server_addr;
+		server_addr.sin_family = AF_INET;
+		server_addr.sin_port = htons(port);
+
+		if (inet_pton(AF_INET, host.c_str(), &server_addr.sin_addr) <= 0)
+			exit_with::perror("inet_pton failed");
+
+		if (connect(fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0)
+			exit_with::perror("connect failed");
+
+		std::cout << "client connected" << std::endl;
+	}
+
 	// ~Client_socket();
 };
 
