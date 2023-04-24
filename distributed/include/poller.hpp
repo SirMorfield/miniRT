@@ -37,8 +37,8 @@ struct pollfd		pollfd(int fd, short events);
 
 enum class Fd_type {
 	SERVER,
-	REQUEST,
-	RESPONSE,
+	RECEIVING,
+	RESPONDING,
 	CLOSED
 };
 
@@ -60,27 +60,29 @@ class Buffer {
 		return *this;
 	}
 
-	Buffer(fd_t fd) : fd(fd) {
+	Buffer(fd_t fd, std::vector<uint8_t> buffer) : fd(fd), _buffer(buffer) {
 		if (this->fd < 0)
 			exit_with::message("Invalid socket fd");
 	}
+	Buffer(fd_t fd) : Buffer(fd, std::vector<uint8_t>()) {}
 
 	IO_status read() {
 		static char buf[1024];
-		while (true) {
+		for (size_t read_i = 0; read_i < 10; read_i++) {
 			ssize_t bytes_read = ::read(fd, buf, sizeof(buf));
 			if (bytes_read < 0)
 				return IO_status::DONE; // todo
 			if (bytes_read == 0)
 				return IO_status::DONE;
-			for (int i = 0; i < bytes_read; i++) {
+			for (ssize_t i = 0; i < bytes_read; i++) {
 				_buffer.push_back(buf[i]);
 			}
 		}
+		return IO_status::DONE;
 	}
 
 	IO_status write() {
-		while (true) {
+		for (size_t i = 0; i < 10; i++) {
 			ssize_t bytes_written = ::write(fd, _buffer.data(), _buffer.size());
 			if (bytes_written < 0)
 				return IO_status::DONE; // todo
@@ -88,10 +90,10 @@ class Buffer {
 				return IO_status::DONE;
 			_buffer.erase(_buffer.begin(), _buffer.begin() + bytes_written);
 		}
+		return IO_status::DONE;
 	}
 
-	bool				  empty() const { return _buffer.empty(); }
-	std::vector<uint8_t>& buffer() { return _buffer; }
+	const std::vector<uint8_t>& data() const { return _buffer; }
 
 	Buffer(Buffer&& mv) = delete;
 	//   private:
@@ -111,6 +113,31 @@ class Poller {
 		_pollfds.push_back(pfd);
 		_fd_types[pfd.fd] = Fd_type::SERVER;
 	}
+	const std::map<fd_t, Buffer>& buffers() const { return _buffers; }
+	Fd_type						  get_fd_type(fd_t f) const { return _fd_types.at(f); }
+	//
+	void set_buffer(fd_t client_fd, const std::vector<uint8_t>& buffer, Fd_type status) {
+
+		_buffers.at(client_fd) = Buffer(client_fd, buffer);
+		_fd_types.at(client_fd) = status;
+		if (status == Fd_type::RESPONDING) {
+			for (auto& pfd : _pollfds) {
+				if (pfd.fd == client_fd) {
+					pfd.events = POLLOUT;
+					return;
+				}
+			}
+		}
+
+		if (status == Fd_type::RECEIVING) {
+			for (auto& pfd : _pollfds) {
+				if (pfd.fd == client_fd) {
+					pfd.events = POLLIN;
+					return;
+				}
+			}
+		}
+	}
 
 	void poll();
 	~Poller() {}
@@ -123,7 +150,7 @@ class Poller {
 
 	void add_fd(pollfd pfd, const Buffer& buffer) {
 		_pollfds.push_back(pfd);
-		_fd_types[pfd.fd] = Fd_type::REQUEST;
+		_fd_types[pfd.fd] = Fd_type::RECEIVING;
 		_buffers[pfd.fd] = buffer;
 	}
 

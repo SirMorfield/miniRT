@@ -19,25 +19,28 @@ Response computer(const Request& request) {
 }
 
 void server(uint16_t port) {
-	Poller poller(mode_ipv4, "127.0.0.1", port);
-	poller.start();
+	RPC_server<Request, Response>				poller(port);
+	RPC_server<Request, Response>::RPC_response response;
+
+	while (true) {
+		auto request = poller.receive();
+		std::cout << "received request: " << std::endl;
+		response = {request.fd, Response(42)};
+		poller.respond(response);
+		std::cout << "responded " << std::endl;
+	}
 }
 
 void client(const std::string& host, uint16_t port) {
-	std::cout << "client" << std::endl;
-
-	std::vector<uint8_t> buffer = {'h', 'e', 'l', 'l', 'o'};
+	std::vector<uint8_t> buffer_write = {'a', 'b', 'v', '*'};
+	std::vector<uint8_t> buffer_reaad = {'a', 'a', 'a', '*'};
 	Client_socket		 client_socket(host, port);
-	while (true) {
-		client_socket.write(buffer);
-		std::cout << "sent" << std::endl;
-		client_socket.read(buffer, buffer.size());
-		std::cout << "received: ";
-		for (auto c : buffer) {
-			std::cout << c;
-		}
-		std::cout << std::endl;
-	}
+	client_socket.write(buffer_write);
+
+	// while (true) {
+	// 	client_socket.write(buffer_write);
+	// 	client_socket.read(buffer_reaad, buffer_reaad.size());
+	// }
 }
 
 int main(int argc, const char* argv[]) {

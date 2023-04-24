@@ -26,15 +26,17 @@ struct Request : public Transfer_object {
 		std::memcpy(buffer.data(), &number, sizeof(number));
 		return buffer;
 	}
-	void deserialize(const std::vector<uint8_t>& data) {
-		ASSERT(data.size(), ==, sizeof(number));
+	[[nodiscard]] bool deserialize(const std::vector<uint8_t>& data) {
+		if (data.size() != sizeof(number))
+			return false;
 		std::memcpy(&number, data.data(), sizeof(number));
+		return true;
 	}
 
 	int number;
 };
 
-struct Response {
+struct Response : public Transfer_object {
   public:
 	Response(int number) : number(number) {}
 	Response() {}
@@ -46,9 +48,11 @@ struct Response {
 		return buffer;
 	}
 
-	void deserialize(const std::vector<uint8_t>& data) {
-		ASSERT(data.size(), ==, sizeof(number));
+	[[nodiscard]] bool deserialize(const std::vector<uint8_t>& data) {
+		if (data.size() != sizeof(number))
+			return false;
 		std::memcpy(&number, data.data(), sizeof(number));
+		return true;
 	}
 
 	int number;

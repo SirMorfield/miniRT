@@ -34,10 +34,14 @@ void Poller::accept_requests() {
 }
 
 void Poller::on_poll(pollfd pfd, Buffer& buffer) {
-	if (pfd.revents & POLLIN)
+	if (this->_fd_types.at(pfd.fd) == Fd_type::RECEIVING && pfd.revents & POLLIN)
 		buffer.read();
-	if (pfd.revents & POLLOUT)
+
+	if (this->_fd_types.at(pfd.fd) == Fd_type::RESPONDING && pfd.revents & POLLOUT) {
 		buffer.write();
+		if (buffer.data().size() == 0)
+			_fd_types.at(pfd.fd) = Fd_type::RECEIVING;
+	}
 }
 
 void Poller::on_poll(pollfd pfd) {
@@ -46,8 +50,8 @@ void Poller::on_poll(pollfd pfd) {
 		accept_requests();
 		break;
 
-	case Fd_type::RESPONSE:
-	case Fd_type::REQUEST:
+	case Fd_type::RESPONDING:
+	case Fd_type::RECEIVING:
 		on_poll(pfd, _buffers[pfd.fd]);
 		break;
 	default:

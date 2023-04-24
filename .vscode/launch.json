@@ -12,6 +12,7 @@
 			"program": "${workspaceFolder}/miniRT",
 			"args": ["rt/dragon.rt"],
 			"cwd": "${workspaceFolder}",
+			// "console": "integratedTerminal",
 			"MIMode": "lldb"
 		},
 		{

@@ -53,6 +53,7 @@ void Socket::close() {
 
 	if (::close(fd) < 0)
 		exit_with_perror("could not close socket");
+	std::cout << "closed fd" << std::endl;
 	fd = -1;
 }
 

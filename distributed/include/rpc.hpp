@@ -1,4 +1,5 @@
 #pragma once
+#include "poller.hpp"
 #include <cstdint>
 #include <iostream>
 #include <string>
@@ -46,10 +47,11 @@ class Client_socket : public Socket {
 	// ~Client_socket();
 };
 
+// todo make sure deserialize is called before accessing
 class Transfer_object {
   public:
 	virtual std::vector<uint8_t> serialize() const = 0;
-	virtual void				 deserialize(const std::vector<uint8_t>& data) = 0;
+	[[nodiscard]] virtual bool	 deserialize(const std::vector<uint8_t>& data) = 0;
 };
 
 template <typename T_request, typename T_response>
@@ -65,7 +67,7 @@ class RPC_client {
 		socket.read(this->read_buffer, this->write_buffer.size());
 
 		T_response out;
-		out.deserialize(this->read_buffer);
+		assert(out.deserialize(this->read_buffer));
 		return out;
 	};
 
@@ -78,22 +80,41 @@ class RPC_client {
 template <typename T_request, typename T_response>
 class RPC_server {
   public:
-	RPC_server(uint16_t port) : socket(port){};
+	RPC_server(uint16_t port) : poller(mode_ipv4, "127.0.0.1", port){};
 
-	void respond(T_response (*handler)(const T_request& request)) {
-		Socket client = socket.accept();
-		this->read_buffer.resize(MAX_BUFFER_SIZE);
-		client.read(read_buffer, read_buffer.size());
+	typedef struct {
+		fd_t	  fd;
+		T_request data;
+	} RPC_request;
 
-		T_request request;
-		request.deserialize(read_buffer);
-		T_response response = handler(request);
-		write_buffer = response.serialize();
-		client.write(write_buffer);
+	typedef struct {
+		fd_t	   fd;
+		T_response data;
+	} RPC_response;
+
+	RPC_request receive() {
+		while (true) {
+			for (const auto& [fd, buffer] : poller.buffers()) {
+				if (poller.get_fd_type(fd) == Fd_type::RESPONDING) {
+					continue;
+				}
+
+				T_request request;
+				if (request.deserialize(buffer.data())) {
+					poller.set_buffer(fd, {}, Fd_type::RECEIVING);
+					return {fd, request};
+				}
+			}
+			poller.poll();
+		}
+	}
+
+	void respond(const RPC_response& response) {
+		auto buffer = response.data.serialize();
+
+		poller.set_buffer(response.fd, buffer, Fd_type::RESPONDING);
 	}
 
   private:
-	Server_socket		 socket;
-	std::vector<uint8_t> read_buffer;
-	std::vector<uint8_t> write_buffer;
+	Poller poller;
 };
